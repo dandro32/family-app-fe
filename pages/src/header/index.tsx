@@ -7,7 +7,11 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 
-const Header = () => {
+interface HeaderProps {
+  onHamburgerClick: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onHamburgerClick }) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky">
@@ -18,6 +22,7 @@ const Header = () => {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={onHamburgerClick}
           >
             <MenuIcon />
           </IconButton>
