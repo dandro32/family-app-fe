@@ -1,30 +1,32 @@
-import { Drawer } from "@mui/material";
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode } from "react";
+import { Drawer, Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+
 import Header from "../header";
 import Menu from "../menu";
+import { useBoolean } from "../shared/utils";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout: FC<LayoutProps> = ({ children }) => {
-  const [isOpen, setOpen] = useState<boolean>(false);
-
-  const openDrawer = () => {
-    setOpen(true);
-  };
-
-  const closeDrawer = () => {
-    setOpen(false);
-  };
+  const [menuIsOpen, openMenu, closeMenu] = useBoolean(false);
+  const [newListIsOpen, openListDrawer, closeListDrawer] = useBoolean(false);
 
   return (
     <>
-      <Header onHamburgerClick={openDrawer} />
-      <Drawer anchor="left" open={isOpen} onClose={closeDrawer}>
+      <Header onHamburgerClick={openMenu} />
+      <Drawer anchor="left" open={menuIsOpen} onClose={closeMenu}>
         <Menu />
       </Drawer>
+      <Drawer anchor="right" open={newListIsOpen} onClose={closeListDrawer}>
+        <div>list drawer</div>
+      </Drawer>
       <main>{children}</main>
+      <Fab color="primary" onClick={openListDrawer}>
+        <AddIcon />
+      </Fab>
     </>
   );
 };
