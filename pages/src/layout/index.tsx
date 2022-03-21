@@ -1,6 +1,6 @@
 import { Drawer } from "@mui/material";
 import { FC, ReactNode, useState } from "react";
-import Header from "../Header";
+import Header from "../header";
 import Menu from "../menu";
 
 interface LayoutProps {
