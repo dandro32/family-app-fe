@@ -25,49 +25,30 @@ const UserForm: FC<UserFormProps> = ({ onSubmit, title }) => {
   };
 
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justifyContent="center"
-      style={{ minHeight: "100vh" }}
-    >
-      <Grid item xs={3}>
-        <Paper
-          elevation={2}
-          sx={{ p: 2 }}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            minWidth: "400px",
-          }}
-        >
-          <Typography variant="h3" component="div">
-            {title}
-          </Typography>
-          <TextField
-            id="login"
-            label="Login"
-            variant="standard"
-            onChange={handleChange}
-            sx={{ mb: 2 }}
-          />
-          <TextField
-            id="password"
-            label="Password"
-            type="password"
-            variant="standard"
-            autoComplete="current-password"
-            onChange={handleChange}
-            sx={{ mb: 2 }}
-          />
-          <Button color="primary" onClick={handleSubmit}>
-            Submit
-          </Button>
-        </Paper>
-      </Grid>
-    </Grid>
+    <>
+      <Typography variant="h3" component="div">
+        {title}
+      </Typography>
+      <TextField
+        id="login"
+        label="Login"
+        variant="standard"
+        onChange={handleChange}
+        sx={{ mb: 2 }}
+      />
+      <TextField
+        id="password"
+        label="Password"
+        type="password"
+        variant="standard"
+        autoComplete="current-password"
+        onChange={handleChange}
+        sx={{ mb: 2 }}
+      />
+      <Button color="primary" onClick={handleSubmit}>
+        Submit
+      </Button>
+    </>
   );
 };
 
