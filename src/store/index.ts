@@ -1,12 +1,10 @@
-import { makeAutoObservable } from "mobx";
+import { createContext, useContext } from "react";
+import Lists from "./lists";
 
-class Store {
-  lists = [];
-  user = {};
+export const storesContext = createContext({
+  lists: new Lists(),
+});
 
-  constructor() {
-    makeAutoObservable(this);
-  }
-}
+const useStores = () => useContext(storesContext);
 
-export default Store;
+export default useStores;

@@ -1,3 +1,4 @@
+import { List } from "@mui/material";
 import { Task } from "./Task";
 
 export interface List {
@@ -6,3 +7,5 @@ export interface List {
   done: number;
   tasks: Task[];
 }
+
+export type CreateList = Pick<List, "title">;

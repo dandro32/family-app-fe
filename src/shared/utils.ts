@@ -23,5 +23,3 @@ const useBoolean = (
 
   return [state, handleSetTrue, handleSetFalse, handleToggle];
 };
-
-export { useBoolean };
