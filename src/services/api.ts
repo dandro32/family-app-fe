@@ -10,6 +10,8 @@ interface ResponseSuccesStatus {
 
 const API_BASE = process.env.API_URL;
 
+console.log(API_BASE);
+
 class Api {
   protected readonly axios: AxiosInstance;
 

@@ -4,7 +4,7 @@ interface BooleanHandler {
   (): void;
 }
 
-const useBoolean = (
+export const useBoolean = (
   initialValue: boolean
 ): [boolean, BooleanHandler, BooleanHandler, BooleanHandler] => {
   const [state, setState] = useState(initialValue);
