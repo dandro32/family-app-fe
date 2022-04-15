@@ -30,7 +30,7 @@ const UserForm: FC<UserFormProps> = ({ onSubmit, title }) => {
         {title}
       </Typography>
       <TextField
-        id="login"
+        id="username"
         label="Login"
         variant="standard"
         onChange={handleChange}
