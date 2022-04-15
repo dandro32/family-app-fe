@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { RefreshTokenPost } from "../models/Auth";
 import { CreateList, List } from "../models/List";
-import { Credentials, UsernameResponse } from "../models/User";
+import { Credentials, User } from "../models/User";
 import Auth from "./auth";
 
 interface ResponseSuccesStatus {
@@ -52,7 +52,7 @@ class Api {
     throw err;
   }
 
-  async register(body: Credentials): Promise<ResponseSuccesStatus> {
+  async register(body: Credentials): Promise<User> {
     try {
       const { data } = await axios.post(`${API_BASE}/users`, body);
 
@@ -63,7 +63,7 @@ class Api {
     }
   }
 
-  async login(body: Credentials): Promise<UsernameResponse> {
+  async login(body: Credentials): Promise<User> {
     try {
       const { data } = await axios.post(`${API_BASE}/login`, body);
 
@@ -85,7 +85,7 @@ class Api {
     }
   }
 
-  async getUsers(): Promise<UsernameResponse[]> {
+  async getUsers(): Promise<User[]> {
     try {
       const headers = await this.getHeaders();
       const { data } = await axios.get(`${API_BASE}/token`, headers);

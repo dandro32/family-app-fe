@@ -1,15 +1,15 @@
 import React, { useState, FC, ChangeEvent } from "react";
-import { Paper, TextField, Button, Grid, Typography } from "@mui/material";
-import { User } from "../../models/User";
+import { TextField, Button, Typography } from "@mui/material";
+import { Credentials } from "../../models/User";
 
 interface UserFormProps {
-  onSubmit: (credentials: User) => void;
+  onSubmit: (credentials: Credentials) => void;
   title: string;
 }
 
 const UserForm: FC<UserFormProps> = ({ onSubmit, title }) => {
   const [loginData, setLoginData] = useState({
-    login: "",
+    username: "",
     password: "",
   });
 

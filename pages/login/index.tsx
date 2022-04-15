@@ -2,12 +2,12 @@ import React from "react";
 import { Typography, Link as MUILink } from "@mui/material";
 import Link from "next/link";
 
-import { User } from "../../src/models/User";
+import { Credentials } from "../../src/models/User";
 import UserForm from "../../src/components/userForm";
 import CentralPaper from "../../src/components/centralPaper";
 
 const Login = () => {
-  const onSubmit = (credentials: User) => {
+  const onSubmit = (credentials: Credentials) => {
     console.log("handle register", credentials);
   };
 
