@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { RefreshTokenPost } from "../models/Auth";
 import { CreateList, List } from "../models/List";
 import { Credentials, UsernameResponse } from "../models/User";
@@ -23,36 +23,79 @@ class Api {
   }
 
   private async getHeaders() {
-    const token = await Auth.getToken();
+    const token = Auth.getToken();
 
     return { headers: { Authorization: `Bearer ${token}` } };
   }
 
-  private async handleError() {}
+  private async handle401() {
+    try {
+      const token = Auth.getRefreshToken();
+
+      if (token) {
+        await Auth.acquireTokenSilently();
+      } else {
+        window.location.href = "/login";
+      }
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
+  private async handleError(err: AxiosError) {
+    if (err?.message?.includes("401")) {
+      return this.handle401();
+    }
+
+    console.log(err);
+    throw err;
+  }
 
   async register(body: Credentials): Promise<ResponseSuccesStatus> {
-    const { data } = await axios.post(`${API_BASE}/users`, body);
+    try {
+      const { data } = await axios.post(`${API_BASE}/users`, body);
 
-    return data;
+      return data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   async login(body: Credentials): Promise<UsernameResponse> {
-    const { data } = await axios.post(`${API_BASE}/login`, body);
+    try {
+      const { data } = await axios.post(`${API_BASE}/login`, body);
 
-    return data;
+      return data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   async getToken(body: RefreshTokenPost): Promise<ResponseSuccesStatus> {
-    const { data } = await axios.post(`${API_BASE}/token`, body);
+    try {
+      const { data } = await axios.post(`${API_BASE}/token`, body);
 
-    return data;
+      return data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   async getUsers(): Promise<UsernameResponse[]> {
-    const headers = await this.getHeaders();
-    const { data } = await axios.get(`${API_BASE}/token`, headers);
+    try {
+      const headers = await this.getHeaders();
+      const { data } = await axios.get(`${API_BASE}/token`, headers);
 
-    return data;
+      return data;
+    } catch (err) {
+      this.handleError(err as AxiosError);
+
+      throw err;
+    }
   }
 
   async getLists(): Promise<List[]> {

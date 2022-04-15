@@ -4,23 +4,29 @@ import Api from "./api";
 class Auth {
   async login() {}
 
-  async getToken() {
+  getToken(): string | undefined {
     const accessToken = Cookies.get("accessToken");
 
     return accessToken;
   }
 
-  async acquireTokenSilently() {
+  getRefreshToken(): string | undefined {
     const refreshToken = Cookies.get("refreshToken");
 
-    if (!refreshToken) {
-      return;
-    }
+    return refreshToken;
+  }
 
+  async acquireTokenSilently() {
     try {
+      const refreshToken = this.getRefreshToken();
+
+      if (!refreshToken) {
+        throw new Error("No refresh token");
+      }
+
       await Api.getToken({ refreshToken });
-    } catch (e) {
-      console.log("acquireTokenSilently Error:", e);
+    } catch (err) {
+      throw err;
     }
   }
 }
