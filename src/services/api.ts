@@ -8,9 +8,7 @@ interface ResponseSuccesStatus {
   status: "OK";
 }
 
-const API_BASE = process.env.API_URL;
-
-console.log(API_BASE);
+const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
 class Api {
   protected readonly axios: AxiosInstance;
