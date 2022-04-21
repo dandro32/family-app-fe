@@ -1,6 +1,9 @@
 import { createContext, FC, ReactNode, useContext } from "react";
+import { enableStaticRendering } from "mobx-react-lite";
 import Auth from "./auth";
 import Lists from "./lists";
+
+enableStaticRendering(typeof window === "undefined");
 
 const StoresContext = createContext({
   auth: new Auth(),
@@ -15,8 +18,6 @@ interface StoreProviderProps {
 
 const StoreProvider: FC<StoreProviderProps> = ({ children }) => {
   const stores = useStores();
-
-  console.log(stores);
 
   return (
     <StoresContext.Provider value={stores}>{children}</StoresContext.Provider>

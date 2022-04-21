@@ -99,10 +99,15 @@ class Api {
   }
 
   async getLists(): Promise<List[]> {
-    const headers = await this.getHeaders();
-    const { data } = await axios.get(`${API_BASE}/lists`, headers);
+    try {
+      const headers = await this.getHeaders();
+      const { data } = await axios.get(`${API_BASE}/lists`, headers);
 
-    return data;
+      return data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 
   async addList(body: CreateList) {

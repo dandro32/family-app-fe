@@ -4,6 +4,8 @@ import Api from "../services/api";
 
 class Lists {
   lists: List[] = [];
+  listsAreLoading = false;
+  listIsUploading = false;
   newList = {
     title: "",
   };
@@ -13,11 +15,24 @@ class Lists {
   }
 
   fetchLists = async () => {
-    this.lists = await Api.getLists();
+    try {
+      console.log("here");
+      this.listsAreLoading = true;
+      this.lists = await Api.getLists();
+      this.listsAreLoading = false;
+    } catch (e) {
+      this.listsAreLoading = false;
+    }
   };
 
   addList = async () => {
-    await Api.addList(this.newList);
+    try {
+      this.listIsUploading = true;
+      await Api.addList(this.newList);
+      this.listIsUploading = true;
+    } catch (e) {
+      this.listIsUploading = false;
+    }
   };
 }
 

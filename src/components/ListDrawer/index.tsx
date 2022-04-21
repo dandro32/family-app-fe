@@ -8,7 +8,14 @@ interface ListDrawerProps {
 
 const ListDrawer: FC<ListDrawerProps> = ({ isOpen = false, closeDrawer }) => {
   return (
-    <Drawer anchor="right" open={isOpen} onClose={closeDrawer}>
+    <Drawer
+      anchor="right"
+      open={isOpen}
+      onClose={closeDrawer}
+      PaperProps={{
+        sx: { width: "50%" },
+      }}
+    >
       test
     </Drawer>
   );
