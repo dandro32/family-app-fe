@@ -1,7 +1,10 @@
-import { Box } from "@mui/material";
+import { Fab } from "@mui/material";
 import React from "react";
 import CardItem from "../../src/components/card/card";
+import ListDrawer from "../../src/components/ListDrawer";
 import PageLayout from "../../src/components/pageLayout";
+import AddIcon from "@mui/icons-material/Add";
+import { useBoolean } from "../../src/shared/utils";
 
 const mockData = Array.from(Array(10).keys()).map((nr: number) => ({
   _id: nr + "",
@@ -11,8 +14,11 @@ const mockData = Array.from(Array(10).keys()).map((nr: number) => ({
 }));
 
 const ListsPage = () => {
+  const [isOpen, openDrawer, closeDrawer] = useBoolean(false);
+
   const handleClick = (_id: string) => {
     console.log(_id);
+    openDrawer();
   };
 
   const renderCards = mockData.map(({ _id, title, done, tasks }) => (
@@ -27,17 +33,27 @@ const ListsPage = () => {
   ));
 
   return (
-    <PageLayout title="Lists Portfolio">
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-around",
-        }}
+    <>
+      <ListDrawer isOpen={isOpen} closeDrawer={closeDrawer} />
+      <PageLayout title="Lists Portfolio">
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-around",
+          }}
+        >
+          {renderCards}
+        </div>
+      </PageLayout>
+      <Fab
+        color="primary"
+        onClick={openDrawer}
+        sx={{ position: "absolute", bottom: 16, right: 16 }}
       >
-        {renderCards}
-      </div>
-    </PageLayout>
+        <AddIcon />
+      </Fab>
+    </>
   );
 };
 

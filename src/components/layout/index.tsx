@@ -1,6 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Drawer, Fab } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Drawer } from "@mui/material";
 
 import Header from "../header";
 import Menu from "../menu";
@@ -12,7 +11,6 @@ interface LayoutProps {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const [menuIsOpen, openMenu, closeMenu] = useBoolean(false);
-  const [newListIsOpen, openListDrawer, closeListDrawer] = useBoolean(false);
 
   return (
     <>
@@ -20,13 +18,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       <Drawer anchor="left" open={menuIsOpen} onClose={closeMenu}>
         <Menu />
       </Drawer>
-      <Drawer anchor="right" open={newListIsOpen} onClose={closeListDrawer}>
-        <div>list drawer</div>
-      </Drawer>
       <main>{children}</main>
-      <Fab color="primary" onClick={openListDrawer}>
-        <AddIcon />
-      </Fab>
     </>
   );
 };

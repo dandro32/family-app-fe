@@ -8,7 +8,8 @@ import {
 } from "@mui/material";
 import { FC } from "react";
 import TaskIcon from "@mui/icons-material/Task";
-import { grey } from "@mui/material/colors";
+import DoneIcon from "@mui/icons-material/Done";
+import { grey, red } from "@mui/material/colors";
 
 interface CardProps {
   _id: string;
@@ -36,10 +37,12 @@ const CardItem: FC<CardProps> = ({
           style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <Typography variant="body1" gutterBottom>
             {title}
+            {done && <DoneIcon sx={{ color: red[500] }} />}
           </Typography>
           <Badge badgeContent={tasksNumber} color="secondary">
             <TaskIcon />
