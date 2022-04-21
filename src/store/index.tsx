@@ -16,6 +16,8 @@ interface StoreProviderProps {
 const StoreProvider: FC<StoreProviderProps> = ({ children }) => {
   const stores = useStores();
 
+  console.log(stores);
+
   return (
     <StoresContext.Provider value={stores}>{children}</StoresContext.Provider>
   );
