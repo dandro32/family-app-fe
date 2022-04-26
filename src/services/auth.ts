@@ -1,17 +1,37 @@
 import Cookies from "js-cookie";
 import Api from "./api";
 
+interface TokenProps {
+  accessToken: string;
+  refreshToken?: string;
+}
+
+const tokenNames: Record<string, string> = {
+  accessToken: "accessToken",
+  refreshToken: "refreshToken",
+};
+
 class Auth {
   async login() {}
 
+  saveAuthTokens({ accessToken, refreshToken = "" }: TokenProps): void {
+    if (accessToken) {
+      Cookies.set(tokenNames.accessToken, accessToken);
+    }
+
+    if (refreshToken) {
+      Cookies.set("refreshToken", refreshToken);
+    }
+  }
+
   getToken(): string | undefined {
-    const accessToken = Cookies.get("accessToken");
+    const accessToken = Cookies.get(tokenNames.accessToken);
 
     return accessToken;
   }
 
   getRefreshToken(): string | undefined {
-    const refreshToken = Cookies.get("refreshToken");
+    const refreshToken = Cookies.get(tokenNames.refreshToken);
 
     return refreshToken;
   }

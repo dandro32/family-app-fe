@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import Cookies from "js-cookie";
 import { RefreshTokenPost } from "../models/Auth";
 import { CreateList, List } from "../models/List";
 import { Credentials, User } from "../models/User";
@@ -18,6 +19,7 @@ class Api {
       baseURL: API_BASE,
       headers: {
         "Content-Type": "application/json",
+        withCredentials: true,
       },
     });
   }
@@ -55,8 +57,9 @@ class Api {
   async register(body: Credentials): Promise<User> {
     try {
       const { data } = await axios.post(`${API_BASE}/users`, body);
+      Auth.saveAuthTokens(data);
 
-      return data;
+      return { username: data.username };
     } catch (err) {
       console.log(err);
       throw err;
@@ -66,19 +69,19 @@ class Api {
   async login(body: Credentials): Promise<User> {
     try {
       const { data } = await axios.post(`${API_BASE}/login`, body);
+      Auth.saveAuthTokens(data);
 
-      return data;
+      return { username: data.username };
     } catch (err) {
       console.log(err);
       throw err;
     }
   }
 
-  async getToken(body: RefreshTokenPost): Promise<ResponseSuccesStatus> {
+  async getToken(body: RefreshTokenPost): Promise<void> {
     try {
       const { data } = await axios.post(`${API_BASE}/token`, body);
-
-      return data;
+      Auth.saveAuthTokens(data);
     } catch (err) {
       console.log(err);
       throw err;
@@ -101,6 +104,7 @@ class Api {
   async getLists(): Promise<List[]> {
     try {
       const headers = await this.getHeaders();
+      console.log(headers);
       const { data } = await axios.get(`${API_BASE}/lists`, headers);
 
       return data;

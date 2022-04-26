@@ -15,7 +15,6 @@
     "@mui/material": "^5.5.1",
     "@mui/styled-engine-sc": "^5.4.2",
     "axios": "^0.26.1",
-    "fireworks": "^2.2.7",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
     "mobx": "^6.5.0",

@@ -7,7 +7,7 @@ import Router from "next/router";
 import { Credentials } from "../../src/models/User";
 import UserForm from "../../src/components/userForm";
 import CentralPaper from "../../src/components/centralPaper";
-import useStores from "../../src/store";
+import { useStores } from "../../src/store";
 
 const Login: FC = observer(() => {
   const { auth } = useStores();
