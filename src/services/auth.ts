@@ -1,10 +1,9 @@
 import Cookies from "js-cookie";
-import Api from "./api";
+import jwt_decode from "jwt-decode";
+import { TokenProps } from "../models/Auth";
+import { User } from "../models/User";
 
-interface TokenProps {
-  accessToken: string;
-  refreshToken?: string;
-}
+import Api from "./api";
 
 const tokenNames: Record<string, string> = {
   accessToken: "accessToken",
@@ -41,7 +40,7 @@ class Auth {
     return refreshToken;
   }
 
-  async acquireTokenSilently() {
+  async acquireTokenSilently(): Promise<User> {
     try {
       const refreshToken = this.getRefreshToken();
 
@@ -49,8 +48,19 @@ class Auth {
         throw new Error("No refresh token");
       }
 
-      await Api.getToken({ refreshToken });
+      const decodedToken: User = jwt_decode(refreshToken);
+
+      if (!decodedToken?.username) {
+        throw new Error("Invalid refresh token");
+      }
+
+      const data = await Api.getToken({ refreshToken });
+      this.saveAuthTokens(data);
+
+      return { username: decodedToken.username };
     } catch (err) {
+      console.log(err);
+      // window.location.href = "/login";
       throw err;
     }
   }

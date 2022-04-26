@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { RefreshTokenPost } from "../models/Auth";
+import { RefreshTokenPost, TokenProps } from "../models/Auth";
 import { CreateList, List } from "../models/List";
 import { Credentials, User } from "../models/User";
 import Auth from "./auth";
@@ -77,6 +77,17 @@ class Api {
     }
   }
 
+  async loginSilently(): Promise<User> {
+    try {
+      const me = await Auth.acquireTokenSilently();
+
+      return me;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
   async logout(username: string): Promise<void> {
     try {
       const headers = await this.getHeaders();
@@ -90,10 +101,12 @@ class Api {
     }
   }
 
-  async getToken(body: RefreshTokenPost): Promise<void> {
+  async getToken(body: RefreshTokenPost): Promise<TokenProps> {
     try {
       const { data } = await axios.post(`${API_BASE}/token`, body);
       Auth.saveAuthTokens(data);
+
+      return data;
     } catch (err) {
       console.log(err);
       throw err;

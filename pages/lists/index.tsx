@@ -7,6 +7,7 @@ import ListDrawer from "../../src/components/ListDrawer";
 import PageLayout from "../../src/components/pageLayout";
 import { useBoolean } from "../../src/shared/utils";
 import { useStores } from "../../src/store";
+import Api from "../../src/services/api";
 
 const ListsPage = () => {
   const { lists: listsStore } = useStores();

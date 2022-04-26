@@ -1,9 +1,10 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useEffect } from "react";
 import { Drawer } from "@mui/material";
 
 import Header from "../header";
 import Menu from "../menu";
 import { useBoolean } from "../../shared/utils";
+import Api from "../../services/api";
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,6 +12,10 @@ interface LayoutProps {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   const [menuIsOpen, openMenu, closeMenu] = useBoolean(false);
+
+  useEffect(() => {
+    Api.loginSilently();
+  }, []);
 
   return (
     <>
