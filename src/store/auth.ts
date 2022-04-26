@@ -20,6 +20,11 @@ class Auth {
     this.me = await Api.login(credentials);
   };
 
+  logout = async () => {
+    await Api.logout(this.me.username);
+    this.me.username = "";
+  };
+
   fetchUsers = async () => {
     this.users = await Api.getUsers();
   };

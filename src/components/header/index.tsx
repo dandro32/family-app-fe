@@ -7,12 +7,16 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import UserIcon from "@mui/icons-material/PersonOutline";
 import { Button, Popover } from "@mui/material";
+import { observer } from "mobx-react-lite";
+import { useStores } from "../../store";
 
 interface HeaderProps {
   onHamburgerClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ onHamburgerClick }) => {
+const Header: React.FC<HeaderProps> = observer(({ onHamburgerClick }) => {
+  const { auth } = useStores();
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -26,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onHamburgerClick }) => {
   };
 
   const handleLogut = () => {
-    console.log("logout");
+    auth.logout();
   };
 
   const open = Boolean(anchorEl);
@@ -51,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ onHamburgerClick }) => {
           </Typography>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Typography variant="subtitle2">User:&nbsp;</Typography>
-            <Typography variant="body2">Daniel</Typography>
+            <Typography variant="body2">{auth.me.username}</Typography>
             <IconButton color="inherit" onClick={handleClick}>
               <UserIcon />
             </IconButton>
@@ -74,6 +78,6 @@ const Header: React.FC<HeaderProps> = ({ onHamburgerClick }) => {
       </AppBar>
     </Box>
   );
-};
+});
 
 export default Header;

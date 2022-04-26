@@ -20,8 +20,13 @@ class Auth {
     }
 
     if (refreshToken) {
-      Cookies.set("refreshToken", refreshToken);
+      Cookies.set(tokenNames.refreshToken, refreshToken);
     }
+  }
+
+  destroyTokens(): void {
+    Cookies.remove(tokenNames.accessToken);
+    Cookies.remove(tokenNames.refreshToken);
   }
 
   getToken(): string | undefined {

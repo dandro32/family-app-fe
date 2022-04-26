@@ -1,5 +1,4 @@
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import Cookies from "js-cookie";
+import axios, { AxiosError, AxiosInstance } from "axios";
 import { RefreshTokenPost } from "../models/Auth";
 import { CreateList, List } from "../models/List";
 import { Credentials, User } from "../models/User";
@@ -72,6 +71,19 @@ class Api {
       Auth.saveAuthTokens(data);
 
       return { username: data.username };
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
+  async logout(username: string): Promise<void> {
+    try {
+      const headers = await this.getHeaders();
+
+      await axios.delete(`${API_BASE}/logout/${username}`, headers);
+      Auth.destroyTokens();
+      window.location.href = "/login";
     } catch (err) {
       console.log(err);
       throw err;
