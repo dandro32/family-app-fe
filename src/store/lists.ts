@@ -16,7 +16,6 @@ class Lists {
 
   fetchLists = async () => {
     try {
-      console.log("here");
       this.listsAreLoading = true;
       this.lists = await Api.getLists();
       this.listsAreLoading = false;

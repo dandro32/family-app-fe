@@ -129,7 +129,6 @@ class Api {
   async getLists(): Promise<List[]> {
     try {
       const headers = await this.getHeaders();
-      console.log(headers);
       const { data } = await axios.get(`${API_BASE}/lists`, headers);
 
       return data;

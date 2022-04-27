@@ -5,9 +5,8 @@ import AddIcon from "@mui/icons-material/Add";
 import CardItem from "../../src/components/card/card";
 import ListDrawer from "../../src/components/ListDrawer";
 import PageLayout from "../../src/components/pageLayout";
-import { useBoolean } from "../../src/shared/utils";
+import { useBoolean, withAuth } from "../../src/shared/utils";
 import { useStores } from "../../src/store";
-import Api from "../../src/services/api";
 
 const ListsPage = () => {
   const { lists: listsStore } = useStores();
@@ -74,4 +73,4 @@ const ListsPage = () => {
   );
 };
 
-export default ListsPage;
+export default withAuth(ListsPage);

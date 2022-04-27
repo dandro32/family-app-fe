@@ -21,7 +21,11 @@ class Auth {
   };
 
   loginSilently = async () => {
-    this.me = await Api.loginSilently();
+    console.log(1111);
+    const { username } = await Api.loginSilently();
+    console.log(222, username);
+    this.me.username = username;
+    console.log(3333, this.me);
   };
 
   logout = async () => {

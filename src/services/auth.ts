@@ -19,7 +19,7 @@ class Auth {
     }
 
     if (refreshToken) {
-      Cookies.set(tokenNames.refreshToken, refreshToken);
+      Cookies.set(tokenNames.refreshToken, refreshToken, { expires: 365 });
     }
   }
 

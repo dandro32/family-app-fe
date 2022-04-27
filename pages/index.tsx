@@ -5,6 +5,7 @@ import { Typography, Box, Grid } from "@mui/material";
 
 import styles from "../styles/Home.module.css";
 import szczerbicePic from "../public/images/szczerbice.jpeg";
+import { withAuth } from "../src/shared/utils";
 
 const Home: NextPage = () => {
   return (
@@ -33,4 +34,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default withAuth(Home);
