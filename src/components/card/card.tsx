@@ -31,7 +31,13 @@ const CardItem: FC<CardProps> = ({
   };
 
   return (
-    <Card sx={{ minWidth: 275, m: 2, background: done ? grey[200] : "white" }}>
+    <Card
+      sx={{
+        minWidth: 275,
+        m: 2,
+        background: done ? grey[200] : "white",
+      }}
+    >
       <CardContent>
         <div
           style={{

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { observer } from "mobx-react-lite";
 
 import CardItem from "../../src/components/card/card";
 import ListDrawer from "../../src/components/ListDrawer";
@@ -9,7 +10,7 @@ import { useBoolean, withAuth } from "../../src/shared/utils";
 import { useStores } from "../../src/store";
 import PageLoader from "../../src/components/pageLoader";
 
-const ListsPage = () => {
+const ListsPage = observer(() => {
   const { lists: listsStore } = useStores();
   const [isOpen, openDrawer, closeDrawer] = useBoolean(false);
 
@@ -62,6 +63,6 @@ const ListsPage = () => {
       </Fab>
     </>
   );
-};
+});
 
 export default withAuth(ListsPage);

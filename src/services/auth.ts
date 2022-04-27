@@ -60,7 +60,7 @@ class Auth {
       return { username: decodedToken.username };
     } catch (err) {
       console.log(err);
-      // window.location.href = "/login";
+      window.location.href = "/login";
       throw err;
     }
   }

@@ -36,7 +36,6 @@ export const withAuth = (Component: NextPage) => {
 
     if (!auth.me.username) {
       Api.loginSilently();
-
       return <PageLoader size={70} />;
     }
 

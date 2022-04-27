@@ -11,6 +11,8 @@ const PageLoader: FC<PageLoaderProps> = ({ size = 40 }) => (
       display: "flex",
       justifyItems: "center",
       alignItems: "center",
+      width: "100vw",
+      height: "100vh",
     }}
   >
     <CircularProgress size={size} />
