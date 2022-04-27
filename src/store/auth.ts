@@ -6,6 +6,7 @@ class Auth {
   me: User = {
     username: "",
   };
+  isLogged: boolean = false;
   users: User[] = [];
 
   constructor() {
@@ -21,16 +22,15 @@ class Auth {
   };
 
   loginSilently = async () => {
-    console.log(1111);
     const { username } = await Api.loginSilently();
-    console.log(222, username);
     this.me.username = username;
-    console.log(3333, this.me);
+    this.isLogged = true;
   };
 
   logout = async () => {
     await Api.logout(this.me.username);
     this.me.username = "";
+    this.isLogged = false;
   };
 
   fetchUsers = async () => {

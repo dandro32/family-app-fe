@@ -1,10 +1,9 @@
-import React, { FC, ReactNode, useState } from "react";
-import { CircularProgress } from "@mui/material";
+import React, { FC, ReactNode, useEffect, useState } from "react";
 import { NextPage } from "next";
 
-import Api from "../services/api";
 import { useStores } from "../store";
 import PageLoader from "../components/pageLoader";
+import { observer, useObserver } from "mobx-react-lite";
 
 interface BooleanHandler {
   (): void;
@@ -32,10 +31,19 @@ export const useBoolean = (
 
 export const withAuth = (Component: NextPage) => {
   const Auth = (props: any): ReactNode => {
-    const { auth } = useStores();
+    const {
+      auth: { isLogged, loginSilently },
+    } = useStores();
 
-    if (!auth.me.username) {
-      Api.loginSilently();
+    useEffect(() => {
+      const authorize = async () => {
+        await loginSilently();
+      };
+
+      authorize();
+    }, [isLogged]);
+
+    if (!isLogged) {
       return <PageLoader size={70} />;
     }
 
@@ -46,5 +54,5 @@ export const withAuth = (Component: NextPage) => {
     Auth.getInitialProps = Component.getInitialProps;
   }
 
-  return Auth;
+  return observer(Auth as FC);
 };
