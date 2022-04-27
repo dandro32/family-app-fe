@@ -4,6 +4,7 @@ import { NextPage } from "next";
 
 import Api from "../services/api";
 import { useStores } from "../store";
+import PageLoader from "../components/pageLoader";
 
 interface BooleanHandler {
   (): void;
@@ -36,19 +37,7 @@ export const withAuth = (Component: NextPage) => {
     if (!auth.me.username) {
       Api.loginSilently();
 
-      return (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100vw",
-            height: "100vh",
-          }}
-        >
-          <CircularProgress size={70} />
-        </div>
-      );
+      return <PageLoader size={70} />;
     }
 
     return <Component {...props} />;

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { CircularProgress, Fab } from "@mui/material";
+import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
 import CardItem from "../../src/components/card/card";
@@ -7,6 +7,7 @@ import ListDrawer from "../../src/components/ListDrawer";
 import PageLayout from "../../src/components/pageLayout";
 import { useBoolean, withAuth } from "../../src/shared/utils";
 import { useStores } from "../../src/store";
+import PageLoader from "../../src/components/pageLoader";
 
 const ListsPage = () => {
   const { lists: listsStore } = useStores();
@@ -50,17 +51,7 @@ const ListsPage = () => {
             {renderCards}
           </div>
         )}
-        {listsStore.listsAreLoading && (
-          <div
-            style={{
-              display: "flex",
-              justifyItems: "center",
-              alignItems: "center",
-            }}
-          >
-            <CircularProgress />
-          </div>
-        )}
+        {listsStore.listsAreLoading && <PageLoader />}
       </PageLayout>
       <Fab
         color="primary"
