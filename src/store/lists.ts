@@ -5,10 +5,6 @@ import Api from "../services/api";
 class Lists {
   lists: List[] = [];
   listsAreLoading = false;
-  listIsUploading = false;
-  newList = {
-    title: "",
-  };
 
   constructor() {
     makeAutoObservable(this);
@@ -21,16 +17,6 @@ class Lists {
       this.listsAreLoading = false;
     } catch (e) {
       this.listsAreLoading = false;
-    }
-  };
-
-  addList = async () => {
-    try {
-      this.listIsUploading = true;
-      await Api.addList(this.newList);
-      this.listIsUploading = true;
-    } catch (e) {
-      this.listIsUploading = false;
     }
   };
 }

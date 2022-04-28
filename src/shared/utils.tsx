@@ -40,7 +40,9 @@ export const withAuth = (Component: NextPage) => {
         await loginSilently();
       };
 
-      authorize();
+      if (!isLogged) {
+        authorize();
+      }
     }, [isLogged]);
 
     if (!isLogged) {

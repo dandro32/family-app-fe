@@ -8,4 +8,6 @@ export interface List {
   tasks: Task[];
 }
 
+export type NewList = Pick<List, "_id" | "title" | "done">;
+
 export type CreateList = Pick<List, "title">;

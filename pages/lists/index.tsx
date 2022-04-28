@@ -11,10 +11,14 @@ import { useStores } from "../../src/store";
 import PageLoader from "../../src/components/pageLoader";
 
 const ListsPage = observer(() => {
-  const { lists: listsStore } = useStores();
+  const {
+    lists: listsStore,
+    listDetails: { setId },
+  } = useStores();
   const [isOpen, openDrawer, closeDrawer] = useBoolean(false);
 
-  const handleClick = (_id: string) => {
+  const handleClick = async (_id: string) => {
+    setId(_id);
     openDrawer();
   };
 
