@@ -138,9 +138,11 @@ class Api {
     }
   }
 
-  async addList(body: CreateList) {
-    const { data } = await axios.post(`${API_BASE}/lists`, body);
-    return data;
+  async addList(body: CreateList): Promise<string> {
+    const headers = await this.getHeaders();
+    const { data } = await axios.post(`${API_BASE}/lists`, body, headers);
+
+    return data.insertedId;
   }
 }
 

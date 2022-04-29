@@ -1,4 +1,4 @@
-import { AppBar, Drawer } from "@mui/material";
+import { AppBar, Divider, Drawer } from "@mui/material";
 import { FC, ChangeEvent } from "react";
 import { TextField, Button, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
@@ -13,6 +13,7 @@ const ListDrawer: FC<ListDrawerProps> = observer(
   ({ isOpen = false, closeDrawer }) => {
     const {
       listDetails: {
+        addNewList,
         setTitle,
         item: { title, _id },
       },
@@ -20,6 +21,10 @@ const ListDrawer: FC<ListDrawerProps> = observer(
 
     const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
       setTitle(e.target.value);
+    };
+
+    const onCreateSubmit = async () => {
+      await addNewList();
     };
 
     return (
@@ -40,16 +45,31 @@ const ListDrawer: FC<ListDrawerProps> = observer(
             height: "60px",
           }}
         >
-          <Typography variant="h6">{`${_id ? "Edit" : "Add"} List`}</Typography>
+          <Typography variant="h5">{`${_id ? "Edit" : "Add"} List`}</Typography>
         </AppBar>
         <TextField
-          id="username"
-          label="Login"
+          id="listTitle"
+          label="List Title"
           variant="standard"
           onChange={onTitleChange}
-          sx={{ mb: 2 }}
+          sx={{ m: 2 }}
           value={title}
         />
+        <Typography variant="h6" sx={{ mx: 2 }}>
+          Tasks:
+        </Typography>
+        <Divider sx={{ mx: 2 }} />
+        {/* <TasksEditor /> */}
+        {!_id && (
+          <Button
+            variant="contained"
+            onClick={onCreateSubmit}
+            sx={{ mx: 2 }}
+            disabled={title.length === 0}
+          >
+            Create List
+          </Button>
+        )}
       </Drawer>
     );
   }
