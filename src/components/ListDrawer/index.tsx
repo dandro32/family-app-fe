@@ -1,5 +1,5 @@
 import { AppBar, Divider, Drawer } from "@mui/material";
-import { FC, ChangeEvent } from "react";
+import { FC, ChangeEvent, useEffect } from "react";
 import { TextField, Button, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../store";
@@ -14,17 +14,32 @@ const ListDrawer: FC<ListDrawerProps> = observer(
     const {
       listDetails: {
         addNewList,
+        getList,
         setTitle,
         item: { title, _id },
       },
     } = useStores();
 
+    useEffect(() => {
+      const fetchList = async () => {
+        await getList();
+      };
+
+      if (_id) {
+        fetchList();
+      }
+    }, [_id]);
+
     const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
       setTitle(e.target.value);
     };
 
-    const onCreateSubmit = async () => {
-      await addNewList();
+    const onSubmit = async () => {
+      if (_id) {
+        // await editList
+      } else {
+        await addNewList();
+      }
     };
 
     return (
@@ -60,16 +75,15 @@ const ListDrawer: FC<ListDrawerProps> = observer(
         </Typography>
         <Divider sx={{ mx: 2 }} />
         {/* <TasksEditor /> */}
-        {!_id && (
-          <Button
-            variant="contained"
-            onClick={onCreateSubmit}
-            sx={{ mx: 2 }}
-            disabled={title.length === 0}
-          >
-            Create List
-          </Button>
-        )}
+
+        <Button
+          variant="contained"
+          onClick={onSubmit}
+          sx={{ mx: 2 }}
+          disabled={title.length === 0}
+        >
+          {`${_id ? "Update" : "Create"} List`}
+        </Button>
       </Drawer>
     );
   }

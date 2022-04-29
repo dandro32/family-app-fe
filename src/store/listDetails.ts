@@ -1,12 +1,13 @@
 import { makeAutoObservable } from "mobx";
-import { NewList } from "../models/List";
+import { List } from "../models/List";
 import Api from "../services/api";
 
 class ListDetails {
-  item: NewList = {
+  item: List = {
     _id: "",
     title: "",
     done: 0,
+    tasks: [],
   };
   isLoading = false;
 
@@ -26,8 +27,20 @@ class ListDetails {
     try {
       this.isLoading = true;
       const _id = await Api.addList({ title: this.item.title });
-      this.setId(_id);
 
+      this.setId(_id);
+      this.isLoading = false;
+    } catch (e) {
+      this.isLoading = false;
+    }
+  };
+
+  getList = async () => {
+    try {
+      this.isLoading = true;
+      const payload = await Api.getListById(this.item._id);
+
+      this.item = payload;
       this.isLoading = false;
     } catch (e) {
       this.isLoading = false;

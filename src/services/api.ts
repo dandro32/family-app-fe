@@ -144,6 +144,13 @@ class Api {
 
     return data.insertedId;
   }
+
+  async getListById(listId: string): Promise<List> {
+    const headers = await this.getHeaders();
+    const { data } = await axios.get(`${API_BASE}/list/${listId}`, headers);
+
+    return data;
+  }
 }
 
 export default new Api();
