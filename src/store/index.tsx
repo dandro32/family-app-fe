@@ -3,6 +3,7 @@ import { enableStaticRendering } from "mobx-react-lite";
 import Auth from "./auth";
 import Lists from "./lists";
 import ListDetails from "./listDetails";
+import Tasks from "./tasks";
 
 enableStaticRendering(typeof window === "undefined");
 
@@ -10,6 +11,7 @@ const StoresContext = createContext({
   auth: new Auth(),
   lists: new Lists(),
   listDetails: new ListDetails(),
+  tasks: new Tasks(),
 });
 
 const useStores = () => useContext(StoresContext);

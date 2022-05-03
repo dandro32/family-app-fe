@@ -1,14 +1,14 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
+import { API_BASE } from "../consts";
 import { RefreshTokenPost, TokenProps } from "../models/Auth";
 import { CreateList, List } from "../models/List";
+import { Task } from "../models/Task";
 import { Credentials, User } from "../models/User";
 import Auth from "./auth";
 
 interface ResponseSuccesStatus {
   status: "OK";
 }
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL;
 
 class Api {
   protected readonly axios: AxiosInstance;
@@ -148,6 +148,13 @@ class Api {
   async getListById(listId: string): Promise<List> {
     const headers = await this.getHeaders();
     const { data } = await axios.get(`${API_BASE}/list/${listId}`, headers);
+
+    return data;
+  }
+
+  async getTasks(listId: string): Promise<Task[]> {
+    const headers = await this.getHeaders();
+    const { data } = await axios.get(`${API_BASE}/tasks/${listId}`, headers);
 
     return data;
   }

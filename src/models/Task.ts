@@ -5,3 +5,5 @@ export interface Task {
   username: string;
   done: number;
 }
+
+export type NewTask = Omit<Task, "_id">;

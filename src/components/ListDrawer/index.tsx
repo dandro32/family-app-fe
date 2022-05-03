@@ -3,6 +3,7 @@ import { FC, ChangeEvent, useEffect } from "react";
 import { TextField, Button, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../store";
+import TasksEditor from "../tasksEditor";
 
 interface ListDrawerProps {
   isOpen?: boolean;
@@ -74,7 +75,7 @@ const ListDrawer: FC<ListDrawerProps> = observer(
           Tasks:
         </Typography>
         <Divider sx={{ mx: 2 }} />
-        {/* <TasksEditor /> */}
+        <TasksEditor listId={_id} />
 
         <Button
           variant="contained"
