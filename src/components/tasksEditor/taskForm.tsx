@@ -1,11 +1,12 @@
 import { FC, ChangeEvent, KeyboardEvent, useState } from "react";
 import {
-  TextField,
+  Box,
+  Button,
+  Checkbox,
+  MenuItem,
   Select,
   SelectChangeEvent,
-  MenuItem,
-  Checkbox,
-  Button,
+  TextField,
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
 
@@ -18,8 +19,9 @@ const ENTER_KEYCODE = 13;
 
 const TaskContent = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
 `;
 
 interface TaskFormProps {
@@ -38,7 +40,7 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
       setNewTaskTitle,
       setNewTaskUser,
     },
-    auth: { users },
+    auth: { users, me },
   } = useStores();
   const [isError, setIsError] = useState<string>("");
 
@@ -83,9 +85,14 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
   ));
 
   const isDisabled = Boolean(isError) || isUploading;
+  const taskUser = newTask.username || me.username;
 
   return (
-    <TaskContent>
+    <Box
+      sx={{
+        m: 2,
+      }}
+    >
       <TextField
         id="title"
         label="Add task title"
@@ -95,23 +102,26 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
         value={newTask.title}
         error={Boolean(isError)}
         helperText={isError}
+        fullWidth
       />
-      <Select
-        id="user-selection"
-        value={newTask.username}
-        label="User"
-        onChange={changeUser}
-      >
-        {renderUsers}
-      </Select>
-      <Checkbox
-        checked={newTask.done === TASK_STATUS.DONE}
-        onChange={markAsDone}
-      />
-      <Button onClick={onSubmit} disabled={isDisabled}>
-        Submit Task
-      </Button>
-    </TaskContent>
+      <TaskContent>
+        <Select
+          id="user-selection"
+          value={taskUser}
+          label="User"
+          onChange={changeUser}
+        >
+          {renderUsers}
+        </Select>
+        <Checkbox
+          checked={newTask.done === TASK_STATUS.DONE}
+          onChange={markAsDone}
+        />
+        <Button onClick={onSubmit} disabled={isDisabled}>
+          Submit Task
+        </Button>
+      </TaskContent>
+    </Box>
   );
 });
 

@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { observer } from "mobx-react-lite";
+import { NextPage, NextPageContext } from "next";
 
 import CardItem from "../../src/components/card/card";
 import ListDrawer from "../../src/components/ListDrawer";
@@ -10,8 +11,9 @@ import { useBoolean, withAuth } from "../../src/shared/utils";
 import { useStores } from "../../src/store";
 import PageLoader from "../../src/components/pageLoader";
 
-const ListsPage = observer(() => {
+const ListsPage: NextPage = observer(() => {
   const {
+    auth: { fetchUsers },
     lists: listsStore,
     listDetails: { setId },
   } = useStores();
@@ -27,7 +29,12 @@ const ListsPage = observer(() => {
       await listsStore.fetchLists();
     };
 
+    const fetchAvailableUsers = async () => {
+      await fetchUsers();
+    };
+
     fetchData();
+    fetchAvailableUsers();
   }, []);
 
   const renderCards = listsStore.lists.map(({ _id, title, done, tasks }) => (

@@ -116,7 +116,7 @@ class Api {
   async getUsers(): Promise<User[]> {
     try {
       const headers = await this.getHeaders();
-      const { data } = await axios.get(`${API_BASE}/token`, headers);
+      const { data } = await axios.get(`${API_BASE}/users`, headers);
 
       return data;
     } catch (err) {
