@@ -1,11 +1,11 @@
-import { FC } from "react";
-import { Typography } from "@mui/material";
+import { ChangeEvent, FC } from "react";
+import { Checkbox, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import DoneIcon from "@mui/icons-material/Done";
 
+import styled from "@emotion/styled";
 import { TASK_STATUS } from "../../consts";
 import { Task } from "../../models/Task";
-import styled from "@emotion/styled";
+import { useStores } from "../../store";
 
 const TaskContent = styled.div`
   display: flex;
@@ -15,11 +15,19 @@ const TaskContent = styled.div`
 
 const TaskCard: FC<Task> = observer(
   ({ _id, title, username, done, listId }) => {
+    const {
+      tasks: { markTaskAsDone },
+    } = useStores();
+
+    const markAsDone = (event: ChangeEvent<HTMLInputElement>) => {
+      markTaskAsDone(event.target.checked);
+    };
+
     return (
       <TaskContent>
         <Typography variant="subtitle1">{title}</Typography>
         <Typography variant="caption">{username}</Typography>
-        {done === TASK_STATUS.DONE && <DoneIcon />}
+        <Checkbox checked={done === TASK_STATUS.DONE} onChange={markAsDone} />
       </TaskContent>
     );
   }

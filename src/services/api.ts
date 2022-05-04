@@ -186,6 +186,23 @@ class Api {
 
     return data;
   }
+
+  async deleteTask(taskId: string): Promise<ResponseSuccesStatus> {
+    const headers = await this.getHeaders();
+    const { data } = await axios.delete(`${API_BASE}/task/${taskId}`, headers);
+
+    return data;
+  }
+
+  async markTaskAsDone(taskId: string): Promise<ResponseSuccesStatus> {
+    const headers = await this.getHeaders();
+    const { data } = await axios.patch(
+      `${API_BASE}/task/${taskId}/done`,
+      headers
+    );
+
+    return data;
+  }
 }
 
 export default new Api();

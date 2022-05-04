@@ -41,6 +41,10 @@ class Tasks {
     this.newTask.done = Number(checked);
   };
 
+  getTaskIndex = (taskId: string) => {
+    return this.items.findIndex((task) => task._id === taskId);
+  };
+
   addNewTask = async (listId: string) => {
     try {
       this.isUploading = true;
@@ -61,6 +65,32 @@ class Tasks {
       this.isUploading = false;
 
       await this.fetchTasks(listId);
+    } catch (e) {
+      this.isUploading = false;
+    }
+  };
+
+  deleteTask = async (taskId: string) => {
+    try {
+      this.isUploading = true;
+      await Api.deleteTask(taskId);
+
+      this.items = this.items.filter((task) => task._id !== taskId);
+      this.isUploading = false;
+    } catch (e) {
+      this.isUploading = false;
+    }
+  };
+
+  markTaskAsDone = async (taskId: string) => {
+    try {
+      await Api.markTaskAsDone(taskId);
+
+      const taskIndex = this.getTaskIndex(taskId);
+
+      if (taskIndex > -1) {
+        this.items[taskIndex].done = TASK_STATUS.DONE;
+      }
     } catch (e) {
       this.isLoading = false;
     }
