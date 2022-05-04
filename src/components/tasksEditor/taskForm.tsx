@@ -1,4 +1,4 @@
-import { FC, ChangeEvent } from "react";
+import { FC, ChangeEvent, KeyboardEvent, useState } from "react";
 import {
   TextField,
   Select,
@@ -14,6 +14,8 @@ import { Task } from "../../models/Task";
 import styled from "@emotion/styled";
 import { useStores } from "../../store";
 
+const ENTER_KEYCODE = 13;
+
 const TaskContent = styled.div`
   display: flex;
   justify-content: center;
@@ -26,18 +28,45 @@ interface TaskFormProps {
 
 const TaskForm: FC<TaskFormProps> = observer(({ listId }) => {
   const {
-    tasks: { newTask },
+    tasks: {
+      addNewTask,
+      isUploading,
+      newTask,
+      setNewTaskDone,
+      setNewTaskTitle,
+      setNewTaskUser,
+    },
     auth: { users },
   } = useStores();
+  const [isError, setIsError] = useState<string>("");
 
-  const onTaskChange = () => {};
+  const onTaskChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewTaskTitle(e.target.value as string);
+  };
 
   const changeUser = (event: SelectChangeEvent) => {
-    // setUser(event.target.value as string);
+    setNewTaskUser(event.target.value as string);
   };
 
   const markAsDone = (event: ChangeEvent<HTMLInputElement>) => {
-    // setChecked(event.target.checked);
+    setNewTaskDone(event.target.checked);
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === ENTER_KEYCODE) {
+      onSubmit();
+    }
+  };
+
+  const onSubmit = async () => {
+    if (!newTask.title) {
+      setIsError("Task cannot be empty");
+
+      return;
+    }
+
+    setIsError("");
+    await addNewTask();
   };
 
   const renderUsers = (users || []).map(({ username }) => (
@@ -46,6 +75,8 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId }) => {
     </MenuItem>
   ));
 
+  const isDisabled = Boolean(isError) || isUploading;
+
   return (
     <TaskContent>
       <TextField
@@ -53,13 +84,15 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId }) => {
         label="Add task title"
         variant="standard"
         onChange={onTaskChange}
+        onKeyDown={onKeyDown}
         value={newTask.title}
+        error={Boolean(isError)}
+        helperText={isError}
       />
       <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
+        id="user-selection"
         value={newTask.username}
-        label="Age"
+        label="User"
         onChange={changeUser}
       >
         {renderUsers}
@@ -68,7 +101,9 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId }) => {
         checked={newTask.done === TASK_STATUS.DONE}
         onChange={markAsDone}
       />
-      <Button>Submit Task</Button>
+      <Button onClick={onSubmit} disabled={isDisabled}>
+        Submit Task
+      </Button>
     </TaskContent>
   );
 });
