@@ -24,12 +24,14 @@ const TaskContent = styled.div`
 
 interface TaskFormProps {
   listId: string;
+  _id?: string;
 }
 
-const TaskForm: FC<TaskFormProps> = observer(({ listId }) => {
+const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
   const {
     tasks: {
       addNewTask,
+      editTask,
       isUploading,
       newTask,
       setNewTaskDone,
@@ -66,7 +68,12 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId }) => {
     }
 
     setIsError("");
-    await addNewTask();
+
+    if (_id) {
+      await editTask(listId, _id);
+    } else {
+      await addNewTask(listId);
+    }
   };
 
   const renderUsers = (users || []).map(({ username }) => (

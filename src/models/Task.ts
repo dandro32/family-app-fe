@@ -6,4 +6,4 @@ export interface Task {
   done: number;
 }
 
-export type NewTask = Omit<Task, "_id">;
+export type NewTask = Omit<Task, "_id" | "listId">;

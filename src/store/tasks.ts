@@ -4,7 +4,6 @@ import { Task, NewTask } from "../models/Task";
 import Api from "../services/api";
 
 const initialTask: NewTask = {
-  listId: "",
   title: "",
   username: "",
   done: 0,
@@ -42,13 +41,26 @@ class Tasks {
     this.newTask.done = Number(checked);
   };
 
-  addNewTask = async () => {
+  addNewTask = async (listId: string) => {
     try {
       this.isUploading = true;
-      const newTask = await Api.addTask(this.newTask);
+      const newTask = await Api.addTask(listId, this.newTask);
       this.items = [...this.items, newTask];
+      this.newTask = initialTask;
 
       this.isUploading = false;
+    } catch (e) {
+      this.isLoading = false;
+    }
+  };
+
+  editTask = async (listId: string, taskId: string) => {
+    try {
+      this.isUploading = true;
+      await Api.editTask(taskId, this.newTask);
+      this.isUploading = false;
+
+      await this.fetchTasks(listId);
     } catch (e) {
       this.isLoading = false;
     }

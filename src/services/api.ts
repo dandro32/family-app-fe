@@ -159,10 +159,24 @@ class Api {
     return data;
   }
 
-  async addTask(body: NewTask): Promise<Task> {
+  async addTask(listId: string, body: NewTask): Promise<Task> {
     const headers = await this.getHeaders();
     const { data } = await axios.post(
-      `${API_BASE}/tasks/${body.listId}`,
+      `${API_BASE}/tasks/${listId}`,
+      {
+        title: body.title,
+        usename: body.username,
+      },
+      headers
+    );
+
+    return data;
+  }
+
+  async editTask(taskId: string, body: NewTask): Promise<ResponseSuccesStatus> {
+    const headers = await this.getHeaders();
+    const { data } = await axios.put(
+      `${API_BASE}/task/${taskId}`,
       {
         title: body.title,
         usename: body.username,
