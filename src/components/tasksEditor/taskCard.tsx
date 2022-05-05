@@ -19,8 +19,8 @@ const TaskCard: FC<Task> = observer(
       tasks: { markTaskAsDone },
     } = useStores();
 
-    const markAsDone = () => {
-      markTaskAsDone(_id);
+    const markAsDone = (e: ChangeEvent<HTMLInputElement>) => {
+      markTaskAsDone(_id, e.target.checked);
     };
 
     return (

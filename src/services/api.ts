@@ -194,10 +194,14 @@ class Api {
     return data;
   }
 
-  async markTaskAsDone(taskId: string): Promise<ResponseSuccesStatus> {
+  async markTaskAsDone(
+    taskId: string,
+    status: boolean
+  ): Promise<ResponseSuccesStatus> {
     const headers = await this.getHeaders();
     const { data } = await axios.patch(
       `${API_BASE}/task/${taskId}/done`,
+      { status: Number(status) },
       headers
     );
 

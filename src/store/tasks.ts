@@ -82,9 +82,9 @@ class Tasks {
     }
   };
 
-  markTaskAsDone = async (taskId: string) => {
+  markTaskAsDone = async (taskId: string, status: boolean) => {
     try {
-      await Api.markTaskAsDone(taskId);
+      await Api.markTaskAsDone(taskId, status);
 
       const taskIndex = this.getTaskIndex(taskId);
 
