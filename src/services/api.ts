@@ -145,6 +145,18 @@ class Api {
     return data.insertedId;
   }
 
+  async editList(list: List): Promise<ResponseSuccesStatus> {
+    const headers = await this.getHeaders();
+    const { _id, done, title } = list;
+    const { data } = await axios.put(
+      `${API_BASE}/list/${_id}`,
+      { done, title },
+      headers
+    );
+
+    return data;
+  }
+
   async getListById(listId: string): Promise<List> {
     const headers = await this.getHeaders();
     const { data } = await axios.get(`${API_BASE}/list/${listId}`, headers);

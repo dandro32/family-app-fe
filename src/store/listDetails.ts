@@ -1,9 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { List } from "../models/List";
 import Api from "../services/api";
-import listsStore from "./lists";
-
-const lists = new listsStore();
 
 const initialData: List = {
   _id: "",
@@ -34,7 +31,17 @@ class ListDetails {
       const _id = await Api.addList({ title: this.item.title });
       this.setId(_id);
 
-      await lists.fetchLists();
+      this.isLoading = false;
+    } catch (e) {
+      this.isLoading = false;
+    }
+  };
+
+  editList = async () => {
+    try {
+      this.isLoading = true;
+      await Api.editList(this.item);
+
       this.isLoading = false;
     } catch (e) {
       this.isLoading = false;

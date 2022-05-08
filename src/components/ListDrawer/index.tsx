@@ -16,10 +16,12 @@ const ListDrawer: FC<ListDrawerProps> = observer(
       listDetails: {
         addNewList,
         clearList,
+        editList,
         getList,
         setTitle,
         item: { title, _id },
       },
+      lists: { fetchLists },
     } = useStores();
 
     useEffect(() => {
@@ -43,11 +45,12 @@ const ListDrawer: FC<ListDrawerProps> = observer(
 
     const onSubmit = async () => {
       if (_id) {
-        // await editList
+        await editList();
       } else {
         await addNewList();
       }
 
+      await fetchLists();
       handleClose();
     };
 
