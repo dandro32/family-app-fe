@@ -1,19 +1,21 @@
 import { FC, ChangeEvent, KeyboardEvent, useState } from "react";
 import {
-  Box,
-  Button,
   Checkbox,
+  FormControl,
+  IconButton,
+  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
 
 import { TASK_STATUS } from "../../consts";
-import { Task } from "../../models/Task";
 import styled from "@emotion/styled";
 import { useStores } from "../../store";
+import SaveIcon from "@mui/icons-material/Save";
 
 const ENTER_KEYCODE = 13;
 
@@ -21,7 +23,13 @@ const TaskContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin: 15px;
+`;
+const TaskActions = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
 `;
 
 interface TaskFormProps {
@@ -88,40 +96,46 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
   const taskUser = newTask.username || me.username;
 
   return (
-    <Box
-      sx={{
-        m: 2,
-      }}
-    >
+    <TaskContent>
       <TextField
         id="title"
-        label="Add task title"
+        label="Add task"
         variant="standard"
         onChange={onTaskChange}
         onKeyDown={onKeyDown}
         value={newTask.title}
         error={Boolean(isError)}
         helperText={isError}
+        multiline
         fullWidth
       />
-      <TaskContent>
-        <Select
-          id="user-selection"
-          value={taskUser}
-          label="User"
-          onChange={changeUser}
-        >
-          {renderUsers}
-        </Select>
-        <Checkbox
-          checked={newTask.done === TASK_STATUS.DONE}
-          onChange={markAsDone}
-        />
-        <Button onClick={onSubmit} disabled={isDisabled}>
-          Submit Task
-        </Button>
-      </TaskContent>
-    </Box>
+
+      <TaskActions>
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="user-selection">User</InputLabel>
+          <Select
+            id="user-selection"
+            value={taskUser}
+            label="User"
+            onChange={changeUser}
+            labelId="user-selection"
+          >
+            {renderUsers}
+          </Select>
+        </FormControl>
+        <Tooltip title="Mark as done">
+          <Checkbox
+            checked={newTask.done === TASK_STATUS.DONE}
+            onChange={markAsDone}
+          />
+        </Tooltip>
+        <Tooltip title="Save">
+          <IconButton onClick={onSubmit} disabled={isDisabled}>
+            <SaveIcon color="primary" />
+          </IconButton>
+        </Tooltip>
+      </TaskActions>
+    </TaskContent>
   );
 });
 

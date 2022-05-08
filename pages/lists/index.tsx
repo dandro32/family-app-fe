@@ -14,7 +14,7 @@ import PageLoader from "../../src/components/pageLoader";
 const ListsPage: NextPage = observer(() => {
   const {
     auth: { fetchUsers },
-    lists: listsStore,
+    lists: { fetchLists, lists: listItems, listsAreLoading },
     listDetails: { setId },
   } = useStores();
   const [isOpen, openDrawer, closeDrawer] = useBoolean(false);
@@ -26,7 +26,7 @@ const ListsPage: NextPage = observer(() => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await listsStore.fetchLists();
+      await fetchLists();
     };
 
     const fetchAvailableUsers = async () => {
@@ -37,7 +37,7 @@ const ListsPage: NextPage = observer(() => {
     fetchAvailableUsers();
   }, []);
 
-  const renderCards = listsStore.lists.map(({ _id, title, done, tasks }) => (
+  const renderCards = listItems.map(({ _id, title, done, tasks }) => (
     <CardItem
       key={`card-${_id}`}
       title={title}
@@ -52,7 +52,7 @@ const ListsPage: NextPage = observer(() => {
     <>
       <ListDrawer isOpen={isOpen} closeDrawer={closeDrawer} />
       <PageLayout title="Lists Portfolio">
-        {!listsStore.listsAreLoading && (
+        {!listsAreLoading && (
           <div
             style={{
               display: "flex",
@@ -63,7 +63,7 @@ const ListsPage: NextPage = observer(() => {
             {renderCards}
           </div>
         )}
-        {listsStore.listsAreLoading && <PageLoader />}
+        {listsAreLoading && <PageLoader size={70} />}
       </PageLayout>
       <Fab
         color="primary"

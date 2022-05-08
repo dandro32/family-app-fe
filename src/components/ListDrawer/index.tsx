@@ -15,6 +15,7 @@ const ListDrawer: FC<ListDrawerProps> = observer(
     const {
       listDetails: {
         addNewList,
+        clearList,
         getList,
         setTitle,
         item: { title, _id },
@@ -35,19 +36,26 @@ const ListDrawer: FC<ListDrawerProps> = observer(
       setTitle(e.target.value);
     };
 
+    const handleClose = () => {
+      closeDrawer();
+      clearList();
+    };
+
     const onSubmit = async () => {
       if (_id) {
         // await editList
       } else {
         await addNewList();
       }
+
+      handleClose();
     };
 
     return (
       <Drawer
         anchor="right"
         open={isOpen}
-        onClose={closeDrawer}
+        onClose={handleClose}
         PaperProps={{
           sx: { width: "50%" },
         }}
