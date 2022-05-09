@@ -1,5 +1,6 @@
+import { List } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useStores } from "../../store";
 import TaskCard from "./taskCard";
 import TaskForm from "./taskForm";
@@ -10,16 +11,26 @@ interface TasksEditorProps {
 
 const TasksEditor: FC<TasksEditorProps> = observer(({ listId }) => {
   const {
-    tasks: { items, isLoading },
+    tasks: { items, isLoading, fetchTasks },
   } = useStores();
 
-  const renderTasks = items.map((item) => (
-    <TaskCard key={item._id} {...item} listId={listId} />
+  useEffect(() => {
+    const getTasks = async () => {
+      await fetchTasks(listId);
+    };
+
+    if (listId) {
+      getTasks();
+    }
+  }, [listId]);
+
+  const renderTasks = items.map((item, i) => (
+    <TaskCard key={item._id} {...item} listId={listId} index={i} />
   ));
 
   return (
     <>
-      {renderTasks}
+      <List sx={{ mx: 5 }}>{renderTasks}</List>
       <TaskForm listId={listId} />
     </>
   );

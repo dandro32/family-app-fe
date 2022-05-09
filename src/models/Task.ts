@@ -6,4 +6,8 @@ export interface Task {
   done: number;
 }
 
+export interface TaskItem extends Task {
+  index: number;
+}
+
 export type NewTask = Omit<Task, "_id" | "listId">;
