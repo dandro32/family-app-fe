@@ -1,7 +1,9 @@
 import { AppBar, Divider, Drawer } from "@mui/material";
 import { FC, ChangeEvent, useEffect } from "react";
 import { TextField, Button, Typography } from "@mui/material";
+import styled from "@emotion/styled";
 import { observer } from "mobx-react-lite";
+
 import { useStores } from "../../store";
 import TasksEditor from "../tasksEditor";
 
@@ -9,6 +11,12 @@ interface ListDrawerProps {
   isOpen?: boolean;
   closeDrawer: () => void;
 }
+
+const ListCreation = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+`;
 
 const ListDrawer: FC<ListDrawerProps> = observer(
   ({ isOpen = false, closeDrawer }) => {
@@ -23,6 +31,8 @@ const ListDrawer: FC<ListDrawerProps> = observer(
       },
       lists: { fetchLists },
     } = useStores();
+
+    const isEditMode = Boolean(_id);
 
     useEffect(() => {
       const fetchList = async () => {
@@ -44,7 +54,7 @@ const ListDrawer: FC<ListDrawerProps> = observer(
     };
 
     const onSubmit = async () => {
-      if (_id) {
+      if (isEditMode) {
         await editList();
       } else {
         await addNewList();
@@ -72,30 +82,39 @@ const ListDrawer: FC<ListDrawerProps> = observer(
             height: "60px",
           }}
         >
-          <Typography variant="h5">{`${_id ? "Edit" : "Add"} List`}</Typography>
+          <Typography variant="h5">{`${
+            isEditMode ? "Edit" : "Add"
+          } List`}</Typography>
         </AppBar>
-        <TextField
-          id="listTitle"
-          label="List Title"
-          variant="standard"
-          onChange={onTitleChange}
-          sx={{ m: 2 }}
-          value={title}
-        />
-        <Typography variant="h6" sx={{ mx: 2 }}>
-          Tasks:
-        </Typography>
-        <Divider sx={{ mx: 2 }} />
-        <TasksEditor listId={_id} />
+        <ListCreation>
+          <TextField
+            id="listTitle"
+            label="List Title"
+            variant="standard"
+            onChange={onTitleChange}
+            sx={{ m: 2 }}
+            value={title}
+            fullWidth
+          />
+          <Button
+            variant="contained"
+            onClick={onSubmit}
+            sx={{ mx: 2, minWidth: 200 }}
+            disabled={title.length === 0}
+          >
+            {`${isEditMode ? "Update" : "Create"} List`}
+          </Button>
+        </ListCreation>
 
-        <Button
-          variant="contained"
-          onClick={onSubmit}
-          sx={{ mx: 2 }}
-          disabled={title.length === 0}
-        >
-          {`${_id ? "Update" : "Create"} List`}
-        </Button>
+        {isEditMode && (
+          <>
+            <Typography variant="h6" sx={{ mx: 2 }}>
+              Tasks:
+            </Typography>
+            <Divider sx={{ mx: 2 }} />
+            <TasksEditor listId={_id} />
+          </>
+        )}
       </Drawer>
     );
   }
