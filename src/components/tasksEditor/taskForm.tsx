@@ -51,6 +51,7 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
     auth: { users, me },
   } = useStores();
   const [isError, setIsError] = useState<string>("");
+  const taskUser = newTask.username || me.username;
 
   const onTaskChange = (e: ChangeEvent<HTMLInputElement>) => {
     setNewTaskTitle(e.target.value as string);
@@ -93,7 +94,6 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
   ));
 
   const isDisabled = Boolean(isError) || isUploading;
-  const taskUser = newTask.username || me.username;
 
   return (
     <TaskContent>

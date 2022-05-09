@@ -177,7 +177,7 @@ class Api {
       `${API_BASE}/tasks/${listId}`,
       {
         title: body.title,
-        usename: body.username,
+        username: body.username,
       },
       headers
     );
@@ -191,7 +191,7 @@ class Api {
       `${API_BASE}/task/${taskId}`,
       {
         title: body.title,
-        usename: body.username,
+        username: body.username,
       },
       headers
     );

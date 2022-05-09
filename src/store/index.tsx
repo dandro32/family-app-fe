@@ -7,11 +7,12 @@ import Tasks from "./tasks";
 
 enableStaticRendering(typeof window === "undefined");
 
+const authStore = new Auth();
 const StoresContext = createContext({
-  auth: new Auth(),
+  auth: authStore,
   lists: new Lists(),
   listDetails: new ListDetails(),
-  tasks: new Tasks(),
+  tasks: new Tasks(authStore),
 });
 
 const useStores = () => useContext(StoresContext);

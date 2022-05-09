@@ -14,8 +14,11 @@ class Tasks {
   newTask: NewTask = initialTask;
   isLoading = false;
   isUploading = false;
+  auth: any; // TODO: handle any
 
-  constructor() {
+  constructor(authStore: any) {
+    // TODO: handle any
+    this.auth = authStore;
     makeAutoObservable(this);
   }
 
@@ -47,8 +50,10 @@ class Tasks {
 
   addNewTask = async (listId: string) => {
     try {
+      const username = this.newTask.username || this.auth.me.username;
+
       this.isUploading = true;
-      const newTask = await Api.addTask(listId, this.newTask);
+      const newTask = await Api.addTask(listId, { ...this.newTask, username });
       this.items = [...this.items, newTask];
       this.newTask = initialTask;
 
