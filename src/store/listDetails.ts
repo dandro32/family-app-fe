@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { List } from "../models/List";
 import Api from "../services/api";
+import { NotificationType } from "./notifications";
 
 const initialData: List = {
   _id: "",
@@ -12,8 +13,11 @@ const initialData: List = {
 class ListDetails {
   item: List = initialData;
   isLoading = false;
+  notificationStore: any = "";
 
-  constructor() {
+  constructor(notificationStore: any) {
+    // TODO: handle any
+    this.notificationStore = notificationStore;
     makeAutoObservable(this);
   }
 
@@ -30,9 +34,14 @@ class ListDetails {
       this.isLoading = true;
       const _id = await Api.addList({ title: this.item.title });
       this.setId(_id);
+      this.notificationStore.setNotification(
+        "List was succesfully added",
+        NotificationType.success
+      );
 
       this.isLoading = false;
     } catch (e) {
+      this.notificationStore.setNotification("Could not added list");
       this.isLoading = false;
     }
   };
@@ -41,10 +50,15 @@ class ListDetails {
     try {
       this.isLoading = true;
       await Api.editList(this.item);
+      this.notificationStore.setNotification(
+        "List was succesfully edited",
+        NotificationType.success
+      );
 
       this.isLoading = false;
     } catch (e) {
       this.isLoading = false;
+      this.notificationStore.setNotification("Could not edit list");
     }
   };
 
@@ -56,6 +70,7 @@ class ListDetails {
       this.item = payload;
       this.isLoading = false;
     } catch (e) {
+      this.notificationStore.setNotification("Could not get proper list");
       this.isLoading = false;
     }
   };

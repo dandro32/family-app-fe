@@ -1,5 +1,6 @@
 import { FC, ReactNode } from "react";
 import { Typography, Grid } from "@mui/material";
+import Notifications from "../notifications";
 
 interface PageTitleProps {
   title: string;
@@ -17,6 +18,7 @@ const PageLayout: FC<PageTitleProps> = ({ title, children }) => (
       <Typography variant="h3">{title}</Typography>
     </Grid>
     {children}
+    <Notifications />
   </Grid>
 );
 
