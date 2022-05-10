@@ -41,6 +41,7 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
   const {
     tasks: {
       addNewTask,
+      clearTask,
       editTask,
       isUploading,
       newTask,
@@ -85,6 +86,12 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
     } else {
       await addNewTask(listId);
     }
+
+    clearTask();
+  };
+
+  const onCancel = () => {
+    clearTask();
   };
 
   const renderUsers = (users || []).map(({ username }) => (
@@ -129,6 +136,13 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
             onChange={markAsDone}
           />
         </Tooltip>
+        {_id && (
+          <Tooltip title="Cancel">
+            <IconButton onClick={onCancel} disabled={isDisabled}>
+              <SaveIcon color="primary" />
+            </IconButton>
+          </Tooltip>
+        )}
         <Tooltip title="Save">
           <IconButton onClick={onSubmit} disabled={isDisabled}>
             <SaveIcon color="primary" />

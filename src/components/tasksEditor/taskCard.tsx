@@ -25,16 +25,20 @@ const TaskActions = styled.div`
 const TaskCard: FC<TaskItem> = observer(
   ({ _id, title, username, done, listId, index }) => {
     const {
-      tasks: { markTaskAsDone },
+      tasks: { deleteTask, markTaskAsDone, setTaskToEdition },
     } = useStores();
 
     const markAsDone = (e: ChangeEvent<HTMLInputElement>) => {
       markTaskAsDone(_id, e.target.checked);
     };
 
-    const handleEdit = () => {};
+    const handleEdit = () => {
+      setTaskToEdition({ _id, title, username, done, listId });
+    };
 
-    const handleDelete = () => {};
+    const handleDelete = () => {
+      deleteTask(_id);
+    };
 
     const backgroundColor = index % 2 === 0 ? grey[300] : grey[50];
 

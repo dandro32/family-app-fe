@@ -4,6 +4,7 @@ import { FC, useEffect } from "react";
 import { useStores } from "../../store";
 import TaskCard from "./taskCard";
 import TaskForm from "./taskForm";
+import { CircularProgress } from "@mui/material";
 
 interface TasksEditorProps {
   listId: string;
@@ -11,7 +12,7 @@ interface TasksEditorProps {
 
 const TasksEditor: FC<TasksEditorProps> = observer(({ listId }) => {
   const {
-    tasks: { items, isLoading, fetchTasks },
+    tasks: { editedTaskId, items, isLoading, fetchTasks },
   } = useStores();
 
   useEffect(() => {
@@ -24,14 +25,27 @@ const TasksEditor: FC<TasksEditorProps> = observer(({ listId }) => {
     }
   }, [listId]);
 
-  const renderTasks = items.map((item, i) => (
-    <TaskCard key={item._id} {...item} listId={listId} index={i} />
-  ));
+  const renderTasks = items.map((item, i) => {
+    return editedTaskId === item._id ? (
+      <TaskForm key={item._id} _id={item._id} listId={listId} />
+    ) : (
+      <TaskCard key={item._id} {...item} listId={listId} index={i} />
+    );
+  });
 
   return (
     <>
-      <List sx={{ mx: 5 }}>{renderTasks}</List>
-      <TaskForm listId={listId} />
+      {isLoading && (
+        <>
+          <CircularProgress size={45} />
+        </>
+      )}
+      {!isLoading && (
+        <>
+          <List sx={{ mx: 5 }}>{renderTasks}</List>
+          {!editedTaskId && <TaskForm listId={listId} />}
+        </>
+      )}
     </>
   );
 });

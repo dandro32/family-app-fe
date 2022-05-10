@@ -15,6 +15,7 @@ class Tasks {
   isLoading = false;
   isUploading = false;
   auth: any; // TODO: handle any
+  editedTaskId: string = "";
 
   constructor(authStore: any) {
     // TODO: handle any
@@ -44,8 +45,24 @@ class Tasks {
     this.newTask.done = Number(checked);
   };
 
+  setEditedTaskId = (_id: string = "") => {
+    this.editedTaskId = _id;
+  };
+
   getTaskIndex = (taskId: string) => {
     return this.items.findIndex((task) => task._id === taskId);
+  };
+
+  setTaskToEdition = (task: Task) => {
+    this.setEditedTaskId(task._id);
+    this.setNewTaskTitle(task.title);
+    this.setNewTaskUser(task.username);
+    this.setNewTaskDone(Boolean(task.done));
+  };
+
+  clearTask = () => {
+    this.newTask = initialTask;
+    this.editedTaskId = "";
   };
 
   addNewTask = async (listId: string) => {
