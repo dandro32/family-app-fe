@@ -70,8 +70,9 @@ class Tasks {
       const username = this.newTask.username || this.auth.me.username;
 
       this.isUploading = true;
-      const newTask = await Api.addTask(listId, { ...this.newTask, username });
-      this.items = [...this.items, newTask];
+      const _id = await Api.addTask(listId, { ...this.newTask, username });
+      this.items = [...this.items, { ...this.newTask, listId, _id }];
+
       this.newTask = initialTask;
 
       this.isUploading = false;
@@ -83,7 +84,7 @@ class Tasks {
   editTask = async (listId: string, taskId: string) => {
     try {
       this.isUploading = true;
-      await Api.editTask(taskId, this.newTask);
+      await Api.editTask(taskId, { ...this.newTask, listId });
       this.isUploading = false;
 
       await this.fetchTasks(listId);

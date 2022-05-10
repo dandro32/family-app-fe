@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import { API_BASE } from "../consts";
 import { RefreshTokenPost, TokenProps } from "../models/Auth";
 import { CreateList, List } from "../models/List";
-import { NewTask, Task } from "../models/Task";
+import { NewTask, Task, TaskEdit } from "../models/Task";
 import { Credentials, User } from "../models/User";
 import Auth from "./auth";
 
@@ -171,7 +171,7 @@ class Api {
     return data;
   }
 
-  async addTask(listId: string, body: NewTask): Promise<Task> {
+  async addTask(listId: string, body: NewTask): Promise<string> {
     const headers = await this.getHeaders();
     const { data } = await axios.post(
       `${API_BASE}/tasks/${listId}`,
@@ -185,14 +185,14 @@ class Api {
     return data;
   }
 
-  async editTask(taskId: string, body: NewTask): Promise<ResponseSuccesStatus> {
+  async editTask(
+    taskId: string,
+    body: TaskEdit
+  ): Promise<ResponseSuccesStatus> {
     const headers = await this.getHeaders();
     const { data } = await axios.put(
       `${API_BASE}/task/${taskId}`,
-      {
-        title: body.title,
-        username: body.username,
-      },
+      body,
       headers
     );
 

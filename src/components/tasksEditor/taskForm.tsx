@@ -16,6 +16,7 @@ import { TASK_STATUS } from "../../consts";
 import styled from "@emotion/styled";
 import { useStores } from "../../store";
 import SaveIcon from "@mui/icons-material/Save";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 const ENTER_KEYCODE = 13;
 
@@ -67,7 +68,7 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.keyCode === ENTER_KEYCODE) {
+    if (e.keyCode === ENTER_KEYCODE && !isUploading) {
       onSubmit();
     }
   };
@@ -106,7 +107,7 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
     <TaskContent>
       <TextField
         id="title"
-        label="Add task"
+        label={`${_id ? "Edit" : "Add"} task`}
         variant="standard"
         onChange={onTaskChange}
         onKeyDown={onKeyDown}
@@ -138,8 +139,8 @@ const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
         </Tooltip>
         {_id && (
           <Tooltip title="Cancel">
-            <IconButton onClick={onCancel} disabled={isDisabled}>
-              <SaveIcon color="primary" />
+            <IconButton onClick={onCancel}>
+              <CancelIcon color="primary" />
             </IconButton>
           </Tooltip>
         )}

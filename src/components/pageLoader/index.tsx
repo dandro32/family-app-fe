@@ -9,7 +9,7 @@ const PageLoader: FC<PageLoaderProps> = ({ size = 40 }) => (
   <div
     style={{
       display: "flex",
-      justifyItems: "center",
+      justifyContent: "center",
       alignItems: "center",
       width: "100vw",
       height: "100vh",
