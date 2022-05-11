@@ -5,8 +5,10 @@ import Api from "../services/api";
 class Lists {
   lists: List[] = [];
   listsAreLoading = false;
+  notificationStore: any;
 
-  constructor() {
+  constructor(notificationStore: any) {
+    this.notificationStore = notificationStore;
     makeAutoObservable(this);
   }
 
@@ -16,6 +18,9 @@ class Lists {
       this.lists = await Api.getLists();
       this.listsAreLoading = false;
     } catch (e) {
+      this.notificationStore.setNotification(
+        "Could not fetch list for this user"
+      );
       this.listsAreLoading = false;
     }
   };

@@ -8,14 +8,14 @@ import Tasks from "./tasks";
 
 enableStaticRendering(typeof window === "undefined");
 
-const authStore = new Auth();
 const notificationStore = new Notifications();
+const authStore = new Auth(notificationStore);
 const StoresContext = createContext({
   auth: authStore,
-  lists: new Lists(),
+  lists: new Lists(notificationStore),
   listDetails: new ListDetails(notificationStore),
   notifications: notificationStore,
-  tasks: new Tasks(authStore),
+  tasks: new Tasks(authStore, notificationStore),
 });
 
 const useStores = () => useContext(StoresContext);

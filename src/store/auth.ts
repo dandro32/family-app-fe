@@ -8,17 +8,27 @@ class Auth {
   };
   isLogged: boolean = false;
   users: User[] = [];
+  notificationStore: any;
 
-  constructor() {
+  constructor(notificationStore: any) {
+    this.notificationStore = notificationStore;
     makeAutoObservable(this);
   }
 
   register = async (credentials: Credentials) => {
-    this.me = await Api.register(credentials);
+    try {
+      this.me = await Api.register(credentials);
+    } catch (e) {
+      this.notificationStore.setNotification("Could not register");
+    }
   };
 
   login = async (credentials: Credentials) => {
-    this.me = await Api.login(credentials);
+    try {
+      this.me = await Api.login(credentials);
+    } catch (e) {
+      this.notificationStore.setNotification("Could not login");
+    }
   };
 
   loginSilently = async () => {
@@ -28,13 +38,21 @@ class Auth {
   };
 
   logout = async () => {
-    await Api.logout(this.me.username);
-    this.me.username = "";
-    this.isLogged = false;
+    try {
+      await Api.logout(this.me.username);
+      this.me.username = "";
+      this.isLogged = false;
+    } catch (e) {
+      this.notificationStore.setNotification("Could not logout");
+    }
   };
 
   fetchUsers = async () => {
-    this.users = await Api.getUsers();
+    try {
+      this.users = await Api.getUsers();
+    } catch (e) {
+      this.notificationStore.setNotification("Could not fetch users");
+    }
   };
 }
 

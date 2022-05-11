@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import { TASK_STATUS } from "../consts";
 import { Task, NewTask } from "../models/Task";
 import Api from "../services/api";
 
@@ -15,11 +14,13 @@ class Tasks {
   isLoading = false;
   isUploading = false;
   auth: any; // TODO: handle any
+  notificationStore: any;
   editedTaskId: string = "";
 
-  constructor(authStore: any) {
+  constructor(authStore: any, notificationStore: any) {
     // TODO: handle any
     this.auth = authStore;
+    this.notificationStore = notificationStore;
     makeAutoObservable(this);
   }
 
@@ -30,6 +31,9 @@ class Tasks {
       this.isLoading = false;
     } catch (e) {
       this.isLoading = false;
+      this.notificationStore.setNotification(
+        "Could not fetch tasks for this list"
+      );
     }
   };
 
@@ -78,6 +82,7 @@ class Tasks {
       this.isUploading = false;
     } catch (e) {
       this.isLoading = false;
+      this.notificationStore.setNotification("Could not add new task");
     }
   };
 
@@ -89,6 +94,7 @@ class Tasks {
 
       await this.fetchTasks(listId);
     } catch (e) {
+      this.notificationStore.setNotification("Could not edit this task");
       this.isUploading = false;
     }
   };
@@ -101,6 +107,7 @@ class Tasks {
       this.items = this.items.filter((task) => task._id !== taskId);
       this.isUploading = false;
     } catch (e) {
+      this.notificationStore.setNotification("Could not delete this task");
       this.isUploading = false;
     }
   };
@@ -112,9 +119,12 @@ class Tasks {
       const taskIndex = this.getTaskIndex(taskId);
 
       if (taskIndex > -1) {
-        this.items[taskIndex].done = TASK_STATUS.DONE;
+        this.items[taskIndex].done = Number(status);
       }
     } catch (e) {
+      this.notificationStore.setNotification(
+        "Could not mark this task as done/undone"
+      );
       this.isLoading = false;
     }
   };
