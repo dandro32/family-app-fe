@@ -164,6 +164,13 @@ class Api {
     return data;
   }
 
+  async deleteList(listId: string): Promise<List> {
+    const headers = await this.getHeaders();
+    const { data } = await axios.delete(`${API_BASE}/list/${listId}`, headers);
+
+    return data;
+  }
+
   async getTasks(listId: string): Promise<Task[]> {
     const headers = await this.getHeaders();
     const { data } = await axios.get(`${API_BASE}/tasks/${listId}`, headers);

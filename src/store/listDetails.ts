@@ -75,6 +75,22 @@ class ListDetails {
     }
   };
 
+  deleteList = async (listId: string) => {
+    try {
+      this.isLoading = true;
+      await Api.deleteList(listId);
+      this.notificationStore.setNotification(
+        "List was succesfully deleted",
+        NotificationType.success
+      );
+
+      this.isLoading = false;
+    } catch (e) {
+      this.notificationStore.setNotification("Could not delete list");
+      this.isLoading = false;
+    }
+  };
+
   clearList = () => {
     this.item = initialData;
     this.isLoading = false;

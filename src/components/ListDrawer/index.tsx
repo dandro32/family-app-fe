@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 
 import { useStores } from "../../store";
 import TasksEditor from "../tasksEditor";
+import { red } from "@mui/material/colors";
 
 interface ListDrawerProps {
   isOpen?: boolean;
@@ -24,6 +25,7 @@ const ListDrawer: FC<ListDrawerProps> = observer(
       listDetails: {
         addNewList,
         clearList,
+        deleteList,
         editList,
         getList,
         setTitle,
@@ -51,6 +53,18 @@ const ListDrawer: FC<ListDrawerProps> = observer(
     const handleClose = () => {
       closeDrawer();
       clearList();
+    };
+
+    const handleDeleteList = async () => {
+      const isConfirmed = confirm("Are you sure you want to delete list"); // TODO styled
+
+      if (!isConfirmed) {
+        return;
+      }
+
+      await deleteList(_id);
+      handleClose();
+      await fetchLists();
     };
 
     const onSubmit = async () => {
@@ -111,8 +125,22 @@ const ListDrawer: FC<ListDrawerProps> = observer(
             <Typography variant="h6" sx={{ mx: 2 }}>
               Tasks:
             </Typography>
-            <Divider sx={{ mx: 2 }} />
+            <Divider />
             <TasksEditor listId={_id} />
+
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={handleDeleteList}
+              sx={{
+                position: "absolute",
+                bottom: 10,
+                left: 20,
+                right: 20,
+              }}
+            >
+              Delete
+            </Button>
           </>
         )}
       </Drawer>
