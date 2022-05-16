@@ -17,6 +17,7 @@ import styled from "@emotion/styled";
 import { useStores } from "../../store";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { Task } from "../../models/Task";
 
 const ENTER_KEYCODE = 13;
 
@@ -35,123 +36,133 @@ const TaskActions = styled.div`
 
 interface TaskFormProps {
   listId: string;
-  _id?: string;
+  item?: Task;
 }
 
-const TaskForm: FC<TaskFormProps> = observer(({ listId, _id = "" }) => {
-  const {
-    tasks: {
-      addNewTask,
-      clearTask,
-      editTask,
-      isUploading,
-      newTask,
-      setNewTaskDone,
-      setNewTaskTitle,
-      setNewTaskUser,
-    },
-    auth: { users, me },
-  } = useStores();
-  const [isError, setIsError] = useState<string>("");
-  const taskUser = newTask.username || me.username;
+const initialTask: Task = {
+  _id: "",
+  listId: "",
+  title: "",
+  username: "",
+  done: 0,
+};
 
-  const onTaskChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTaskTitle(e.target.value as string);
-  };
+const TaskForm: FC<TaskFormProps> = observer(
+  ({ listId, item = initialTask }) => {
+    const {
+      tasks: { addNewTask, clearTask, editTask, isUploading },
+      auth: { users, me },
+    } = useStores();
+    const [isError, setIsError] = useState<string>("");
+    const [taskForm, setTaskForm] = useState<Task>(item);
 
-  const changeUser = (event: SelectChangeEvent) => {
-    setNewTaskUser(event.target.value as string);
-  };
+    const setTaskTitle = (e: ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
 
-  const markAsDone = (event: ChangeEvent<HTMLInputElement>) => {
-    setNewTaskDone(event.target.checked);
-  };
+      setTaskForm((prevState) => ({ ...prevState, title: value }));
+    };
 
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.keyCode === ENTER_KEYCODE && !isUploading) {
-      onSubmit();
-    }
-  };
+    const changeUser = (e: SelectChangeEvent) => {
+      const { value } = e.target;
 
-  const onSubmit = async () => {
-    if (!newTask.title) {
-      setIsError("Task cannot be empty");
+      console.log(123, value);
 
-      return;
-    }
+      setTaskForm((prevState) => ({ ...prevState, username: value }));
+    };
 
-    setIsError("");
+    const markAsDone = (e: ChangeEvent<HTMLInputElement>) => {
+      const { checked } = e.target;
 
-    if (_id) {
-      await editTask(listId, _id);
-    } else {
-      await addNewTask(listId);
-    }
+      setTaskForm((prevState) => ({ ...prevState, done: Number(checked) }));
+    };
 
-    clearTask();
-  };
+    const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.keyCode === ENTER_KEYCODE && !isUploading) {
+        onSubmit();
+      }
+    };
 
-  const onCancel = () => {
-    clearTask();
-  };
+    const onSubmit = async () => {
+      if (!taskForm.title) {
+        setIsError("Task cannot be empty");
 
-  const renderUsers = (users || []).map(({ username }) => (
-    <MenuItem key={`select-user-${username}`} value={username}>
-      {username}
-    </MenuItem>
-  ));
+        return;
+      }
 
-  const isDisabled = Boolean(isError) || isUploading;
+      setIsError("");
 
-  return (
-    <TaskContent>
-      <TextField
-        id="title"
-        label={`${_id ? "Edit" : "Add"} task`}
-        variant="standard"
-        onChange={onTaskChange}
-        onKeyDown={onKeyDown}
-        value={newTask.title}
-        error={Boolean(isError)}
-        helperText={isError}
-        multiline
-        fullWidth
-      />
+      if (taskForm._id) {
+        await editTask(listId, taskForm);
+      } else {
+        await addNewTask(listId, taskForm);
+      }
 
-      <TaskActions>
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-          <InputLabel id="user-selection">User</InputLabel>
-          <Select
-            id="user-selection"
-            value={taskUser}
-            label="User"
-            onChange={changeUser}
-            labelId="user-selection"
-          >
-            {renderUsers}
-          </Select>
-        </FormControl>
-        <Tooltip title="Mark as done">
-          <Checkbox
-            checked={newTask.done === TASK_STATUS.DONE}
-            onChange={markAsDone}
-          />
-        </Tooltip>
-        {_id && (
-          <Tooltip title="Cancel">
-            <IconButton onClick={onCancel}>
-              <CancelIcon color="primary" />
+      clearTask();
+      setTaskForm(initialTask);
+    };
+
+    const onCancel = () => {
+      clearTask();
+    };
+
+    const renderUsers = (users || []).map(({ username }) => (
+      <MenuItem key={`select-user-${username}`} value={username}>
+        {username}
+      </MenuItem>
+    ));
+
+    const isDisabled = Boolean(isError) || isUploading;
+
+    return (
+      <TaskContent>
+        <TextField
+          id="title"
+          label={`${taskForm._id ? "Edit" : "Add"} task`}
+          variant="standard"
+          onChange={setTaskTitle}
+          onKeyDown={onKeyDown}
+          value={taskForm.title}
+          error={Boolean(isError)}
+          helperText={isError}
+          multiline
+          fullWidth
+        />
+
+        <TaskActions>
+          <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id="user-selection">User</InputLabel>
+            <Select
+              id="user-selection"
+              value={taskForm.username || me.username}
+              label="User"
+              onChange={changeUser}
+              labelId="user-selection"
+            >
+              {renderUsers}
+            </Select>
+          </FormControl>
+          <Tooltip title="Mark as done">
+            <Checkbox
+              checked={taskForm.done === TASK_STATUS.DONE}
+              onChange={markAsDone}
+            />
+          </Tooltip>
+          {taskForm._id && (
+            <Tooltip title="Cancel">
+              <IconButton onClick={onCancel}>
+                <CancelIcon color="primary" />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip title="Save">
+            <IconButton onClick={onSubmit} disabled={isDisabled}>
+              <SaveIcon color="primary" />
             </IconButton>
           </Tooltip>
-        )}
-        <Tooltip title="Save">
-          <IconButton onClick={onSubmit} disabled={isDisabled}>
-            <SaveIcon color="primary" />
-          </IconButton>
-        </Tooltip>
-      </TaskActions>
-    </TaskContent>
-  );
-});
+        </TaskActions>
+      </TaskContent>
+    );
+  }
+);
 
 export default TaskForm;

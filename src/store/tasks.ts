@@ -1,16 +1,9 @@
 import { makeAutoObservable } from "mobx";
-import { Task, NewTask } from "../models/Task";
+import { Task, TaskEdit } from "../models/Task";
 import Api from "../services/api";
-
-const initialTask: NewTask = {
-  title: "",
-  username: "",
-  done: 0,
-};
 
 class Tasks {
   items: Task[] = [];
-  newTask: NewTask = initialTask;
   isLoading = false;
   isUploading = false;
   auth: any; // TODO: handle any
@@ -37,18 +30,6 @@ class Tasks {
     }
   };
 
-  setNewTaskTitle = (value: string) => {
-    this.newTask.title = value;
-  };
-
-  setNewTaskUser = (username: string) => {
-    this.newTask.username = username;
-  };
-
-  setNewTaskDone = (checked: boolean) => {
-    this.newTask.done = Number(checked);
-  };
-
   setEditedTaskId = (_id: string = "") => {
     this.editedTaskId = _id;
   };
@@ -57,27 +38,17 @@ class Tasks {
     return this.items.findIndex((task) => task._id === taskId);
   };
 
-  setTaskToEdition = (task: Task) => {
-    this.setEditedTaskId(task._id);
-    this.setNewTaskTitle(task.title);
-    this.setNewTaskUser(task.username);
-    this.setNewTaskDone(Boolean(task.done));
-  };
-
   clearTask = () => {
-    this.newTask = initialTask;
     this.editedTaskId = "";
   };
 
-  addNewTask = async (listId: string) => {
+  addNewTask = async (listId: string, body: Task) => {
     try {
-      const username = this.newTask.username || this.auth.me.username;
+      const username = body.username || this.auth.me.username;
 
       this.isUploading = true;
-      const _id = await Api.addTask(listId, { ...this.newTask, username });
-      this.items = [...this.items, { ...this.newTask, listId, _id }];
-
-      this.newTask = initialTask;
+      const _id = await Api.addTask(listId, { ...body, username });
+      this.items = [...this.items, { ...body, listId, _id }];
 
       this.isUploading = false;
     } catch (e) {
@@ -86,10 +57,12 @@ class Tasks {
     }
   };
 
-  editTask = async (listId: string, taskId: string) => {
+  editTask = async (listId: string, task: Task) => {
     try {
       this.isUploading = true;
-      await Api.editTask(taskId, { ...this.newTask, listId });
+      const { _id, ...body } = task;
+
+      await Api.editTask(_id, { ...body, listId });
       this.isUploading = false;
 
       await this.fetchTasks(listId);

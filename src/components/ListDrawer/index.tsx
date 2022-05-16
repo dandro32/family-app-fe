@@ -29,22 +29,28 @@ const ListDrawer: FC<ListDrawerProps> = observer(
         editList,
         getList,
         setTitle,
-        item: { title, _id },
+        item: { title, _id: listId },
       },
       lists: { fetchLists },
+      tasks: { fetchTasks, items: taskItems, isLoading: tasksAreLoading },
     } = useStores();
 
-    const isEditMode = Boolean(_id);
+    const isEditMode = Boolean(listId);
 
     useEffect(() => {
       const fetchList = async () => {
         await getList();
       };
 
-      if (_id) {
+      const fetchTaskDetails = async () => {
+        await fetchTasks(listId);
+      };
+
+      if (listId) {
         fetchList();
+        fetchTaskDetails();
       }
-    }, [_id]);
+    }, [listId]);
 
     const onTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
       setTitle(e.target.value);
@@ -62,7 +68,7 @@ const ListDrawer: FC<ListDrawerProps> = observer(
         return;
       }
 
-      await deleteList(_id);
+      await deleteList(listId);
       handleClose();
       await fetchLists();
     };
@@ -126,7 +132,11 @@ const ListDrawer: FC<ListDrawerProps> = observer(
               Tasks:
             </Typography>
             <Divider />
-            <TasksEditor listId={_id} />
+            <TasksEditor
+              listId={listId}
+              tasks={taskItems}
+              isLoading={tasksAreLoading}
+            />
 
             <Button
               color="error"

@@ -7,6 +7,7 @@ import styled from "@emotion/styled";
 import { List } from "../../models/List";
 import TasksEditor from "../tasksEditor";
 import { useBoolean } from "../../shared/utils";
+import lists from "../../../pages/lists";
 
 const ListWrapper = styled.div`
   width: 400px;
@@ -19,12 +20,10 @@ interface AllListsItem {
 }
 
 const AllListsItem: FC<AllListsItem> = ({ list }) => {
-  const [willBeEdited, onEnter, onLeave] = useBoolean(false);
-
   return (
-    <ListWrapper onMouseEnter={onEnter} onMouseMove={onLeave}>
+    <ListWrapper>
       <Typography variant="h3">{list.title}</Typography>
-      <TasksEditor listId={list._id} fetchForDetails={willBeEdited} />
+      <TasksEditor listId={list._id} tasks={list.tasks} />
     </ListWrapper>
   );
 };

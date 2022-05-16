@@ -59,21 +59,3 @@ export const withAuth = (Component: NextPage) => {
 
   return observer(Auth as FC);
 };
-
-export const useFetchForDetails = (listId: string): [Task[], boolean] => {
-  const {
-    tasks: { items, isLoading, fetchTasks },
-  } = useStores();
-
-  useEffect(() => {
-    const getTasks = async () => {
-      await fetchTasks(listId);
-    };
-
-    if (listId) {
-      getTasks();
-    }
-  }, []);
-
-  return [items, isLoading];
-};
