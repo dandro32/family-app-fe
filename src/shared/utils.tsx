@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import { useStores } from "../store";
 import PageLoader from "../components/pageLoader";
 import { observer, useObserver } from "mobx-react-lite";
+import { Task } from "../models/Task";
 
 interface BooleanHandler {
   (): void;
@@ -57,4 +58,22 @@ export const withAuth = (Component: NextPage) => {
   }
 
   return observer(Auth as FC);
+};
+
+export const useFetchForDetails = (listId: string): [Task[], boolean] => {
+  const {
+    tasks: { items, isLoading, fetchTasks },
+  } = useStores();
+
+  useEffect(() => {
+    const getTasks = async () => {
+      await fetchTasks(listId);
+    };
+
+    if (listId) {
+      getTasks();
+    }
+  }, []);
+
+  return [items, isLoading];
 };

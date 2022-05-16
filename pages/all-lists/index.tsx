@@ -11,6 +11,7 @@ import AllListsItem from "../../src/components/all-lists-item";
 
 const ListsWrapper = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
 `;
