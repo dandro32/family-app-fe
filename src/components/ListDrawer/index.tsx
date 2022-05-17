@@ -34,10 +34,12 @@ const ListDrawer: FC<ListDrawerProps> = observer(
       lists: { fetchLists },
       tasks: {
         addNewTask,
+        deleteTask,
         editTask,
         fetchTasks,
         isLoading: tasksAreLoading,
         items: taskItems,
+        markTaskAsDone,
       },
     } = useStores();
 
@@ -144,6 +146,8 @@ const ListDrawer: FC<ListDrawerProps> = observer(
               isLoading={tasksAreLoading}
               addNewTask={addNewTask}
               editTask={editTask}
+              markTaskAsDone={markTaskAsDone}
+              deleteTask={deleteTask}
             />
             <Button
               color="error"

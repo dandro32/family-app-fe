@@ -21,7 +21,12 @@ interface AllListsItem {
 
 const AllListsItem: FC<AllListsItem> = observer(({ list }) => {
   const {
-    lists: { addNewTaskInList, editTaskInList },
+    lists: {
+      addNewTaskInList,
+      editTaskInList,
+      deleteTaskInList,
+      markTaskAsDoneInList,
+    },
   } = useStores();
 
   return (
@@ -32,6 +37,8 @@ const AllListsItem: FC<AllListsItem> = observer(({ list }) => {
         tasks={list.tasks}
         addNewTask={addNewTaskInList}
         editTask={editTaskInList}
+        deleteTask={deleteTaskInList}
+        markTaskAsDone={markTaskAsDoneInList}
       />
     </ListWrapper>
   );

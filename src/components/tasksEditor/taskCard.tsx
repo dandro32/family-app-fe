@@ -13,7 +13,7 @@ import { observer } from "mobx-react-lite";
 
 import styled from "@emotion/styled";
 import { TASK_STATUS } from "../../consts";
-import { TaskItem } from "../../models/Task";
+import { Task } from "../../models/Task";
 import { useStores } from "../../store";
 
 const TaskActions = styled.div`
@@ -22,14 +22,28 @@ const TaskActions = styled.div`
   align-items: center;
 `;
 
-const TaskCard: FC<TaskItem> = observer(
-  ({ _id, title, username, done, index }) => {
+interface TaskCardProps {
+  deleteTask: (listId: string, taskId: string) => Promise<void>;
+  index: number;
+  listId: string;
+  markTaskAsDone: (
+    listId: string,
+    taskId: string,
+    status: boolean
+  ) => Promise<void>;
+  task: Task;
+}
+
+const TaskCard: FC<TaskCardProps> = observer(
+  ({ task, index, listId, markTaskAsDone, deleteTask }) => {
     const {
-      tasks: { deleteTask, markTaskAsDone, setEditedTaskId },
+      tasks: { setEditedTaskId },
     } = useStores();
 
+    const { _id, title, username, done } = task;
+
     const markAsDone = (e: ChangeEvent<HTMLInputElement>) => {
-      markTaskAsDone(_id, e.target.checked);
+      markTaskAsDone(listId, _id, e.target.checked);
     };
 
     const handleEdit = () => {
@@ -37,7 +51,7 @@ const TaskCard: FC<TaskItem> = observer(
     };
 
     const handleDelete = () => {
-      deleteTask(_id);
+      deleteTask(listId, _id);
     };
 
     const backgroundColor = index % 2 === 0 ? grey[300] : grey[50];

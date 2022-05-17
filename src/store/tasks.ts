@@ -73,7 +73,7 @@ class Tasks {
     }
   };
 
-  deleteTask = async (taskId: string) => {
+  deleteTask = async (_: string, taskId: string) => {
     try {
       this.isUploading = true;
       await Api.deleteTask(taskId);
@@ -86,7 +86,7 @@ class Tasks {
     }
   };
 
-  markTaskAsDone = async (taskId: string, status: boolean) => {
+  markTaskAsDone = async (_: string, taskId: string, status: boolean) => {
     try {
       await Api.markTaskAsDone(taskId, status);
 

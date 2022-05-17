@@ -13,10 +13,24 @@ interface TasksEditorProps {
   isLoading?: boolean;
   editTask: (listId: string, body: Task) => Promise<void>;
   addNewTask: (listId: string, body: Task) => Promise<void>;
+  markTaskAsDone: (
+    listId: string,
+    taskId: string,
+    status: boolean
+  ) => Promise<void>;
+  deleteTask: (listId: string, taskId: string) => Promise<void>;
 }
 
 const TasksEditor: FC<TasksEditorProps> = observer(
-  ({ listId, tasks = [], isLoading = false, addNewTask, editTask }) => {
+  ({
+    listId,
+    tasks = [],
+    isLoading = false,
+    addNewTask,
+    editTask,
+    markTaskAsDone,
+    deleteTask,
+  }) => {
     const {
       tasks: { editedTaskId },
     } = useStores();
@@ -31,7 +45,14 @@ const TasksEditor: FC<TasksEditorProps> = observer(
           editTask={editTask}
         />
       ) : (
-        <TaskCard key={item._id} {...item} listId={listId} index={i} />
+        <TaskCard
+          key={item._id}
+          task={item}
+          listId={listId}
+          index={i}
+          markTaskAsDone={markTaskAsDone}
+          deleteTask={deleteTask}
+        />
       );
     });
 

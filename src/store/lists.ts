@@ -105,7 +105,11 @@ class Lists {
     }
   };
 
-  markTaskAsDone = async (listId: string, taskId: string, status: boolean) => {
+  markTaskAsDoneInList = async (
+    listId: string,
+    taskId: string,
+    status: boolean
+  ) => {
     try {
       await Api.markTaskAsDone(taskId, status);
 
