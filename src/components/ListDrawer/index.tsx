@@ -32,7 +32,13 @@ const ListDrawer: FC<ListDrawerProps> = observer(
         item: { title, _id: listId },
       },
       lists: { fetchLists },
-      tasks: { fetchTasks, items: taskItems, isLoading: tasksAreLoading },
+      tasks: {
+        addNewTask,
+        editTask,
+        fetchTasks,
+        isLoading: tasksAreLoading,
+        items: taskItems,
+      },
     } = useStores();
 
     const isEditMode = Boolean(listId);
@@ -136,6 +142,8 @@ const ListDrawer: FC<ListDrawerProps> = observer(
               listId={listId}
               tasks={taskItems}
               isLoading={tasksAreLoading}
+              addNewTask={addNewTask}
+              editTask={editTask}
             />
 
             <Button

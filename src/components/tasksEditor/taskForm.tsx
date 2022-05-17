@@ -37,6 +37,8 @@ const TaskActions = styled.div`
 interface TaskFormProps {
   listId: string;
   item?: Task;
+  editTask: (listId: string, body: Task) => Promise<void>;
+  addNewTask: (listId: string, body: Task) => Promise<void>;
 }
 
 const initialTask: Task = {
@@ -48,9 +50,9 @@ const initialTask: Task = {
 };
 
 const TaskForm: FC<TaskFormProps> = observer(
-  ({ listId, item = initialTask }) => {
+  ({ listId, item = initialTask, editTask, addNewTask }) => {
     const {
-      tasks: { addNewTask, clearTask, editTask, isUploading },
+      tasks: { clearTask, isUploading },
       auth: { users, me },
     } = useStores();
     const [isError, setIsError] = useState<string>("");
@@ -64,8 +66,6 @@ const TaskForm: FC<TaskFormProps> = observer(
 
     const changeUser = (e: SelectChangeEvent) => {
       const { value } = e.target;
-
-      console.log(123, value);
 
       setTaskForm((prevState) => ({ ...prevState, username: value }));
     };

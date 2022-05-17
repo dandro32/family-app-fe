@@ -11,17 +11,25 @@ interface TasksEditorProps {
   listId: string;
   tasks: Task[];
   isLoading?: boolean;
+  editTask: (listId: string, body: Task) => Promise<void>;
+  addNewTask: (listId: string, body: Task) => Promise<void>;
 }
 
 const TasksEditor: FC<TasksEditorProps> = observer(
-  ({ listId, tasks = [], isLoading = false }) => {
+  ({ listId, tasks = [], isLoading = false, addNewTask, editTask }) => {
     const {
       tasks: { editedTaskId },
     } = useStores();
 
     const renderTasks = tasks.map((item, i) => {
       return editedTaskId === item._id ? (
-        <TaskForm key={item._id} item={item} listId={listId} />
+        <TaskForm
+          key={item._id}
+          item={item}
+          listId={listId}
+          addNewTask={addNewTask}
+          editTask={editTask}
+        />
       ) : (
         <TaskCard key={item._id} {...item} listId={listId} index={i} />
       );
@@ -37,7 +45,13 @@ const TasksEditor: FC<TasksEditorProps> = observer(
         {!isLoading && (
           <>
             <List sx={{ mx: 5 }}>{renderTasks}</List>
-            {!editedTaskId && <TaskForm listId={listId} />}
+            {!editedTaskId && (
+              <TaskForm
+                listId={listId}
+                addNewTask={addNewTask}
+                editTask={editTask}
+              />
+            )}
           </>
         )}
       </>

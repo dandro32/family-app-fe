@@ -20,6 +20,7 @@ const AllListsPage: NextPage = observer(() => {
   const {
     auth: { fetchUsers },
     lists: { fetchLists, lists: listsItems, listsAreLoading },
+    tasks: { fetchTasks },
   } = useStores();
 
   useEffect(() => {
@@ -36,7 +37,11 @@ const AllListsPage: NextPage = observer(() => {
   }, []);
 
   const renderListItems = listsItems.map((listItem) => (
-    <AllListsItem key={`list-item-${listItem._id}`} list={listItem} />
+    <AllListsItem
+      key={`list-item-${listItem._id}`}
+      list={listItem}
+      fetchTasks={fetchTasks}
+    />
   ));
 
   return (

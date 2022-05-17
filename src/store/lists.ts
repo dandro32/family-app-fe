@@ -1,11 +1,13 @@
 import { makeAutoObservable } from "mobx";
 import { List } from "../models/List";
+import { Task } from "../models/Task";
 import Api from "../services/api";
 
 class Lists {
   lists: List[] = [];
   listsAreLoading = false;
   notificationStore: any;
+  listAreChainging: string[] = [];
 
   constructor(notificationStore: any) {
     this.notificationStore = notificationStore;
@@ -22,6 +24,68 @@ class Lists {
         "Could not fetch list for this user"
       );
       this.listsAreLoading = false;
+    }
+  };
+
+  loading = (listId: string) => {
+    this.listAreChainging = [...this.listAreChainging, listId];
+  };
+
+  notLoading = (listId: string) => {
+    this.listAreChainging = [...this.listAreChainging, listId];
+  };
+
+  getTasksFromLists = (listId: string): Task[] => {
+    const list = this.lists.find((item) => item._id === listId);
+
+    if (!list) {
+      throw new Error("List does not exist in store");
+    }
+
+    return list.tasks;
+  };
+
+  setTaskToLists = (listId: string, tasks: Task[]): void => {
+    const index = this.lists.findIndex((item) => item._id === listId);
+
+    if (index === -1) {
+      throw new Error("List does not exist in store");
+    }
+
+    this.lists[index].tasks = tasks;
+  };
+
+  addNewTaskInList = async (listId: string, body: Task) => {
+    try {
+      this.loading(listId);
+
+      const _id = await Api.addTask(listId, body);
+
+      const tasks = this.getTasksFromLists(listId);
+      this.setTaskToLists(listId, [...tasks, { ...body, _id }]);
+      this.notLoading(listId);
+    } catch (e) {
+      this.notLoading(listId);
+      this.notificationStore.setNotification("Could not add new task");
+    }
+  };
+
+  editTaskInList = async (listId: string, task: Task) => {
+    try {
+      this.loading(listId);
+      const { _id, ...body } = task;
+      const tasks = this.getTasksFromLists(listId);
+
+      await Api.editTask(_id, { ...body, listId });
+
+      const updatedTasks = tasks.map((item) =>
+        item._id === _id ? task : item
+      );
+
+      this.setTaskToLists(listId, updatedTasks);
+      this.notLoading(listId);
+    } catch (e) {
+      this.notificationStore.setNotification("Could not edit this task");
     }
   };
 }
