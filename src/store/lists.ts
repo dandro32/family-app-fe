@@ -92,6 +92,37 @@ class Lists {
       this.notificationStore.setNotification("Could not edit this task");
     }
   };
+
+  deleteTaskInList = async (listId: string, taskId: string) => {
+    try {
+      await Api.deleteTask(taskId);
+
+      const tasks = this.getTasksFromLists(listId);
+      const filteredTasks = tasks.filter((task) => task._id !== taskId);
+      this.setTaskToLists(listId, filteredTasks);
+    } catch (e) {
+      this.notificationStore.setNotification("Could not delete this task");
+    }
+  };
+
+  markTaskAsDone = async (listId: string, taskId: string, status: boolean) => {
+    try {
+      await Api.markTaskAsDone(taskId, status);
+
+      const tasks = this.getTasksFromLists(listId);
+      const taskIndex = tasks.findIndex((task) => task._id === taskId);
+
+      if (taskIndex > -1) {
+        tasks[taskIndex].done = Number(status);
+
+        this.setTaskToLists(listId, tasks);
+      }
+    } catch (e) {
+      this.notificationStore.setNotification(
+        "Could not mark this task as done/undone"
+      );
+    }
+  };
 }
 
 export default Lists;
