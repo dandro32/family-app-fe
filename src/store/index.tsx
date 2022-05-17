@@ -12,7 +12,7 @@ const notificationStore = new Notifications();
 const authStore = new Auth(notificationStore);
 const StoresContext = createContext({
   auth: authStore,
-  lists: new Lists(notificationStore),
+  lists: new Lists(authStore, notificationStore),
   listDetails: new ListDetails(notificationStore),
   notifications: notificationStore,
   tasks: new Tasks(authStore, notificationStore),

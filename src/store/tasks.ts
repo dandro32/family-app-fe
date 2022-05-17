@@ -6,13 +6,13 @@ class Tasks {
   items: Task[] = [];
   isLoading = false;
   isUploading = false;
-  auth: any; // TODO: handle any
+  authStore: any; // TODO: handle any
   notificationStore: any;
   editedTaskId: string = "";
 
   constructor(authStore: any, notificationStore: any) {
     // TODO: handle any
-    this.auth = authStore;
+    this.authStore = authStore;
     this.notificationStore = notificationStore;
     makeAutoObservable(this);
   }
@@ -44,11 +44,12 @@ class Tasks {
 
   addNewTask = async (listId: string, body: Task) => {
     try {
-      const username = body.username || this.auth.me.username;
+      const username = body.username || this.authStore.me.username;
+      const updatedBody = { ...body, username };
 
       this.isUploading = true;
-      const _id = await Api.addTask(listId, { ...body, username });
-      this.items = [...this.items, { ...body, listId, _id }];
+      const _id = await Api.addTask(listId, updatedBody);
+      this.items = [...this.items, { ...updatedBody, listId, _id }];
 
       this.isUploading = false;
     } catch (e) {

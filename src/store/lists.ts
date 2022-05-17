@@ -8,8 +8,10 @@ class Lists {
   listsAreLoading = false;
   notificationStore: any;
   listAreChainging: string[] = [];
+  authStore: any; // TODO: handle any
 
-  constructor(notificationStore: any) {
+  constructor(authStore: any, notificationStore: any) {
+    this.authStore = authStore;
     this.notificationStore = notificationStore;
     makeAutoObservable(this);
   }
@@ -58,11 +60,13 @@ class Lists {
   addNewTaskInList = async (listId: string, body: Task) => {
     try {
       this.loading(listId);
+      const username = body.username || this.authStore.me.username;
+      const updatedBody = { ...body, username };
 
-      const _id = await Api.addTask(listId, body);
+      const _id = await Api.addTask(listId, updatedBody);
 
       const tasks = this.getTasksFromLists(listId);
-      this.setTaskToLists(listId, [...tasks, { ...body, _id }]);
+      this.setTaskToLists(listId, [...tasks, { ...updatedBody, _id }]);
       this.notLoading(listId);
     } catch (e) {
       this.notLoading(listId);

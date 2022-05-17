@@ -145,13 +145,12 @@ const ListDrawer: FC<ListDrawerProps> = observer(
               addNewTask={addNewTask}
               editTask={editTask}
             />
-
             <Button
               color="error"
               variant="outlined"
               onClick={handleDeleteList}
               sx={{
-                position: "absolute",
+                position: "relative",
                 bottom: 10,
                 left: 20,
                 right: 20,
