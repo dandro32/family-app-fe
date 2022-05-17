@@ -11,18 +11,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { observer } from "mobx-react-lite";
 
-import styled from "@emotion/styled";
 import { TASK_STATUS } from "../../consts";
 import { Task } from "../../models/Task";
 import { useStores } from "../../store";
 
-const TaskActions = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 interface TaskCardProps {
+  disabled?: boolean;
   deleteTask: (listId: string, taskId: string) => Promise<void>;
   index: number;
   listId: string;
@@ -35,7 +29,7 @@ interface TaskCardProps {
 }
 
 const TaskCard: FC<TaskCardProps> = observer(
-  ({ task, index, listId, markTaskAsDone, deleteTask }) => {
+  ({ task, index, listId, markTaskAsDone, deleteTask, disabled = false }) => {
     const {
       tasks: { setEditedTaskId },
     } = useStores();
@@ -69,15 +63,16 @@ const TaskCard: FC<TaskCardProps> = observer(
             <Checkbox
               checked={done === TASK_STATUS.DONE}
               onChange={markAsDone}
+              disabled={disabled}
             />
           </Tooltip>
           <Tooltip title="Edit task">
-            <IconButton onClick={handleEdit}>
+            <IconButton onClick={handleEdit} disabled={disabled}>
               <EditIcon color="primary" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete task">
-            <IconButton onClick={handleDelete}>
+            <IconButton onClick={handleDelete} disabled={disabled}>
               <DeleteIcon color="primary" />
             </IconButton>
           </Tooltip>

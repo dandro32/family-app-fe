@@ -6,7 +6,6 @@ import { observer } from "mobx-react-lite";
 
 import { useStores } from "../../store";
 import TasksEditor from "../tasksEditor";
-import { red } from "@mui/material/colors";
 
 interface ListDrawerProps {
   isOpen?: boolean;
@@ -38,6 +37,7 @@ const ListDrawer: FC<ListDrawerProps> = observer(
         editTask,
         fetchTasks,
         isLoading: tasksAreLoading,
+        isUploading,
         items: taskItems,
         markTaskAsDone,
       },
@@ -148,6 +148,7 @@ const ListDrawer: FC<ListDrawerProps> = observer(
               editTask={editTask}
               markTaskAsDone={markTaskAsDone}
               deleteTask={deleteTask}
+              disabled={isUploading}
             />
             <Button
               color="error"

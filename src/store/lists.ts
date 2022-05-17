@@ -34,7 +34,7 @@ class Lists {
   };
 
   notLoading = (listId: string) => {
-    this.listAreChainging = [...this.listAreChainging, listId];
+    this.listAreChainging = this.listAreChainging.filter((id) => id !== listId);
   };
 
   getTasksFromLists = (listId: string): Task[] => {
@@ -89,18 +89,22 @@ class Lists {
       this.setTaskToLists(listId, updatedTasks);
       this.notLoading(listId);
     } catch (e) {
+      this.notLoading(listId);
       this.notificationStore.setNotification("Could not edit this task");
     }
   };
 
   deleteTaskInList = async (listId: string, taskId: string) => {
     try {
+      this.loading(listId);
       await Api.deleteTask(taskId);
 
       const tasks = this.getTasksFromLists(listId);
       const filteredTasks = tasks.filter((task) => task._id !== taskId);
       this.setTaskToLists(listId, filteredTasks);
+      this.notLoading(listId);
     } catch (e) {
+      this.notLoading(listId);
       this.notificationStore.setNotification("Could not delete this task");
     }
   };
@@ -111,6 +115,7 @@ class Lists {
     status: boolean
   ) => {
     try {
+      this.loading(listId);
       await Api.markTaskAsDone(taskId, status);
 
       const tasks = this.getTasksFromLists(listId);
@@ -121,7 +126,9 @@ class Lists {
 
         this.setTaskToLists(listId, tasks);
       }
+      this.notLoading(listId);
     } catch (e) {
+      this.notLoading(listId);
       this.notificationStore.setNotification(
         "Could not mark this task as done/undone"
       );

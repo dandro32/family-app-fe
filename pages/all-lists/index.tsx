@@ -12,7 +12,7 @@ import AllListsItem from "../../src/components/all-lists-item";
 const ListsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: start;
   justify-content: flex-start;
 `;
 
@@ -20,7 +20,6 @@ const AllListsPage: NextPage = observer(() => {
   const {
     auth: { fetchUsers },
     lists: { fetchLists, lists: listsItems, listsAreLoading },
-    tasks: { fetchTasks },
   } = useStores();
 
   useEffect(() => {
@@ -37,11 +36,7 @@ const AllListsPage: NextPage = observer(() => {
   }, []);
 
   const renderListItems = listsItems.map((listItem) => (
-    <AllListsItem
-      key={`list-item-${listItem._id}`}
-      list={listItem}
-      fetchTasks={fetchTasks}
-    />
+    <AllListsItem key={`list-item-${listItem._id}`} list={listItem} />
   ));
 
   return (

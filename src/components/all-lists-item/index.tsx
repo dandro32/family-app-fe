@@ -10,9 +10,15 @@ import { observer } from "mobx-react-lite";
 import { useStores } from "../../store";
 
 const ListWrapper = styled.div`
-  width: 400px;
+  width: 650px;
   margin: 10px;
-  border: 1px solid black;
+  border: 1px solid grey;
+`;
+
+const StyledTitle = styled(Typography)`
+  && {
+    text-align: center;
+  }
 `;
 
 interface AllListsItem {
@@ -23,15 +29,16 @@ const AllListsItem: FC<AllListsItem> = observer(({ list }) => {
   const {
     lists: {
       addNewTaskInList,
-      editTaskInList,
       deleteTaskInList,
+      editTaskInList,
+      listAreChainging,
       markTaskAsDoneInList,
     },
   } = useStores();
 
   return (
     <ListWrapper>
-      <Typography variant="h3">{list.title}</Typography>
+      <StyledTitle variant="h4">{list.title}</StyledTitle>
       <TasksEditor
         listId={list._id}
         tasks={list.tasks}
@@ -39,6 +46,7 @@ const AllListsItem: FC<AllListsItem> = observer(({ list }) => {
         editTask={editTaskInList}
         deleteTask={deleteTaskInList}
         markTaskAsDone={markTaskAsDoneInList}
+        disabled={listAreChainging.includes(list._id)}
       />
     </ListWrapper>
   );

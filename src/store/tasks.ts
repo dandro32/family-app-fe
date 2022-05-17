@@ -53,7 +53,7 @@ class Tasks {
 
       this.isUploading = false;
     } catch (e) {
-      this.isLoading = false;
+      this.isUploading = false;
       this.notificationStore.setNotification("Could not add new task");
     }
   };
@@ -88,6 +88,7 @@ class Tasks {
 
   markTaskAsDone = async (_: string, taskId: string, status: boolean) => {
     try {
+      this.isUploading = true;
       await Api.markTaskAsDone(taskId, status);
 
       const taskIndex = this.getTaskIndex(taskId);
@@ -95,11 +96,12 @@ class Tasks {
       if (taskIndex > -1) {
         this.items[taskIndex].done = Number(status);
       }
+      this.isUploading = false;
     } catch (e) {
       this.notificationStore.setNotification(
         "Could not mark this task as done/undone"
       );
-      this.isLoading = false;
+      this.isUploading = false;
     }
   };
 }

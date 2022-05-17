@@ -8,28 +8,30 @@ import { CircularProgress } from "@mui/material";
 import { Task } from "../../models/Task";
 
 interface TasksEditorProps {
-  listId: string;
-  tasks: Task[];
-  isLoading?: boolean;
-  editTask: (listId: string, body: Task) => Promise<void>;
   addNewTask: (listId: string, body: Task) => Promise<void>;
+  disabled?: boolean;
+  deleteTask: (listId: string, taskId: string) => Promise<void>;
+  editTask: (listId: string, body: Task) => Promise<void>;
+  isLoading?: boolean;
+  listId: string;
   markTaskAsDone: (
     listId: string,
     taskId: string,
     status: boolean
   ) => Promise<void>;
-  deleteTask: (listId: string, taskId: string) => Promise<void>;
+  tasks: Task[];
 }
 
 const TasksEditor: FC<TasksEditorProps> = observer(
   ({
-    listId,
-    tasks = [],
-    isLoading = false,
     addNewTask,
-    editTask,
-    markTaskAsDone,
     deleteTask,
+    disabled = false,
+    editTask,
+    isLoading = false,
+    listId,
+    markTaskAsDone,
+    tasks = [],
   }) => {
     const {
       tasks: { editedTaskId },
@@ -52,6 +54,7 @@ const TasksEditor: FC<TasksEditorProps> = observer(
           index={i}
           markTaskAsDone={markTaskAsDone}
           deleteTask={deleteTask}
+          disabled={disabled}
         />
       );
     });
