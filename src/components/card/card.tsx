@@ -48,11 +48,19 @@ const CardItem: FC<CardProps> = ({
         >
           <Typography variant="body1" gutterBottom>
             {title}
-            {done && <DoneIcon sx={{ color: red[500] }} />}
           </Typography>
-          <Badge badgeContent={tasksNumber} color="secondary">
-            <TaskIcon />
-          </Badge>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {done && <DoneIcon sx={{ color: red[500] }} />}
+            <Badge badgeContent={tasksNumber} color="secondary">
+              <TaskIcon />
+            </Badge>
+          </div>
         </div>
       </CardContent>
       <CardActions

@@ -3,11 +3,14 @@
 import { Typography } from "@mui/material";
 import { FC } from "react";
 import styled from "@emotion/styled";
+import DoneIcon from "@mui/icons-material/Done";
+import { red } from "@mui/material/colors";
 
 import { List } from "../../models/List";
 import TasksEditor from "../tasksEditor";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../store";
+import { checkIfListIsDone } from "../../shared/utils";
 
 const ListWrapper = styled.div`
   width: 650px;
@@ -35,10 +38,14 @@ const AllListsItem: FC<AllListsItem> = observer(({ list }) => {
       markTaskAsDoneInList,
     },
   } = useStores();
+  const isDone = checkIfListIsDone(list.tasks);
 
   return (
     <ListWrapper>
-      <StyledTitle variant="h4">{list.title}</StyledTitle>
+      <StyledTitle variant="h4">
+        {list.title}
+        {isDone && <DoneIcon sx={{ color: red[500] }} />}
+      </StyledTitle>
       <TasksEditor
         listId={list._id}
         tasks={list.tasks}

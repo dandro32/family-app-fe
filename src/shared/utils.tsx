@@ -5,6 +5,7 @@ import { useStores } from "../store";
 import PageLoader from "../components/pageLoader";
 import { observer, useObserver } from "mobx-react-lite";
 import { Task } from "../models/Task";
+import { TASK_STATUS } from "../consts";
 
 interface BooleanHandler {
   (): void;
@@ -59,3 +60,6 @@ export const withAuth = (Component: NextPage) => {
 
   return observer(Auth as FC);
 };
+
+export const checkIfListIsDone = (tasks: Task[]) =>
+  tasks.every((task) => task.done === TASK_STATUS.DONE);

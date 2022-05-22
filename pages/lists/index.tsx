@@ -7,7 +7,11 @@ import { NextPage, NextPageContext } from "next";
 import CardItem from "../../src/components/card/card";
 import ListDrawer from "../../src/components/ListDrawer";
 import PageLayout from "../../src/components/pageLayout";
-import { useBoolean, withAuth } from "../../src/shared/utils";
+import {
+  checkIfListIsDone,
+  useBoolean,
+  withAuth,
+} from "../../src/shared/utils";
 import { useStores } from "../../src/store";
 import PageLoader from "../../src/components/pageLoader";
 
@@ -37,16 +41,20 @@ const ListsPage: NextPage = observer(() => {
     fetchAvailableUsers();
   }, []);
 
-  const renderCards = listItems.map(({ _id, title, done, tasks }) => (
-    <CardItem
-      key={`card-${_id}`}
-      title={title}
-      _id={_id}
-      done={Boolean(done)}
-      tasksNumber={tasks.length}
-      onClick={handleClick}
-    />
-  ));
+  const renderCards = listItems.map(({ _id, title, done, tasks }) => {
+    const isDone = Boolean(done) || checkIfListIsDone(tasks);
+
+    return (
+      <CardItem
+        key={`card-${_id}`}
+        title={title}
+        _id={_id}
+        done={isDone}
+        tasksNumber={tasks.length}
+        onClick={handleClick}
+      />
+    );
+  });
 
   return (
     <>

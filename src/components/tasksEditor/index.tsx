@@ -6,6 +6,7 @@ import TaskCard from "./taskCard";
 import TaskForm from "./taskForm";
 import { CircularProgress } from "@mui/material";
 import { Task } from "../../models/Task";
+import { TASK_STATUS } from "../../consts";
 
 interface TasksEditorProps {
   addNewTask: (listId: string, body: Task) => Promise<void>;
@@ -37,6 +38,22 @@ const TasksEditor: FC<TasksEditorProps> = observer(
       tasks: { editedTaskId },
     } = useStores();
 
+    const handleMarkTaskAsDone = async (
+      listId: string,
+      taskId: string,
+      status: boolean
+    ) => {
+      const undoneTasks = tasks
+        .map((task) => task.done)
+        .filter((task) => task !== TASK_STATUS.DONE);
+
+      if (undoneTasks.length === 1 && status === true) {
+        alert("Congratulations. List is done");
+      }
+
+      await markTaskAsDone(listId, taskId, status);
+    };
+
     const renderTasks = tasks.map((item, i) => {
       return editedTaskId === item._id ? (
         <TaskForm
@@ -52,7 +69,7 @@ const TasksEditor: FC<TasksEditorProps> = observer(
           task={item}
           listId={listId}
           index={i}
-          markTaskAsDone={markTaskAsDone}
+          markTaskAsDone={handleMarkTaskAsDone}
           deleteTask={deleteTask}
           disabled={disabled}
         />
