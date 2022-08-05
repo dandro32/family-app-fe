@@ -14,6 +14,7 @@ import {
 } from "../../src/shared/utils";
 import { useStores } from "../../src/store";
 import PageLoader from "../../src/components/pageLoader";
+import Chat from "../../src/components/chat";
 
 const ListsPage: NextPage = observer(() => {
   const {
@@ -79,6 +80,7 @@ const ListsPage: NextPage = observer(() => {
         sx={{ position: "absolute", bottom: 16, right: 16 }}
       >
         <AddIcon />
+        <Chat />
       </Fab>
     </>
   );
