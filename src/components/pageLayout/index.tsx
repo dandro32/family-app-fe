@@ -1,6 +1,7 @@
 import { FC, ReactNode } from "react";
 import { Typography, Grid } from "@mui/material";
 import Notifications from "../notifications";
+import Chat from "../chat";
 
 interface PageTitleProps {
   title: string;
@@ -18,6 +19,7 @@ const PageLayout: FC<PageTitleProps> = ({ title, children }) => (
       <Typography variant="h3">{title}</Typography>
     </Grid>
     {children}
+    <Chat />
     <Notifications />
   </Grid>
 );
