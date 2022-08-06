@@ -67,18 +67,16 @@ const socket = io("http://localhost:8081", {
   withCredentials: true,
 });
 
+export interface ChatMessage {
+  name: string;
+  message: string;
+}
+
 const Chat: React.FC = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [isHidden, setIsHidden] = useState(true);
   const [message, setMessage] = useState("");
-
-  const items: any = [
-    // { name: "Daniel", message: "Joł" },
-    // { name: "Daniel", message: "wasup" },
-    // { name: "Paulina", message: "wasup" },
-  ];
-
-  console.log(socket);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -89,13 +87,15 @@ const Chat: React.FC = () => {
       setIsConnected(false);
     });
 
+    socket.on(SOCKET_EVENT_NAME, (response: ChatMessage) => {
+      setMessages((prevState) => [...prevState, response]);
+    });
+
     return () => {
       socket.off("connect");
       socket.off("disconnect");
     };
   }, []);
-
-  console.log("is connected", isConnected);
 
   const showChat = () => {
     setIsHidden(false);
@@ -129,12 +129,10 @@ const Chat: React.FC = () => {
     }
 
     setMessage("");
-    socket.emit(SOCKET_EVENT_NAME, message, (response: any) => {
-      console.log(response); // "got it"
-    });
+    socket.emit(SOCKET_EVENT_NAME, { name: "daniel", message });
   };
 
-  const renderMessages = items.map((item: any, index: number) => {
+  const renderMessages = messages.map((item: any, index: number) => {
     return (
       <>
         <List>
@@ -156,7 +154,7 @@ const Chat: React.FC = () => {
     <ChatContainer>
       {isHidden && (
         <IconButton color="primary" aria-label="chat" onClick={showChat}>
-          <Badge badgeContent={items.length} color="error">
+          <Badge badgeContent={messages.length} color="error">
             <ChatBubbleOutlineOutlinedIcon />
           </Badge>
         </IconButton>
