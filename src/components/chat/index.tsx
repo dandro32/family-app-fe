@@ -7,8 +7,8 @@ import {
   Alert,
   Avatar,
   Badge,
+  CircularProgress,
   Divider,
-  Fab,
   Grid,
   IconButton,
   List,
@@ -25,6 +25,9 @@ import ClickAwayListener from "@mui/base/ClickAwayListener";
 import styled from "@emotion/styled";
 import { API_BASE, SOCKET_EVENT_NAME } from "../../consts";
 import { deepOrange, deepPurple } from "@mui/material/colors";
+import { observer } from "mobx-react-lite";
+import { useStores } from "../../store";
+import { ChatMessage } from "../../models/Chat";
 
 const ENTER_KEYCODE = 13;
 
@@ -39,6 +42,7 @@ const ChatSection = styled(Grid)`
 const MessageArea = styled(List)`
   && {
     max-height: 60vh;
+    max-width: 400px;
     overflow-y: scroll;
   }
 `;
@@ -67,16 +71,31 @@ const socket = io("http://localhost:8081", {
   withCredentials: true,
 });
 
-export interface ChatMessage {
-  name: string;
-  message: string;
-}
-
-const Chat: React.FC = () => {
+const Chat: React.FC = observer(() => {
+  const {
+    auth: {
+      me: { username },
+    },
+    chat: { items, isLoading, fetchChatHistory },
+  } = useStores();
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [isHidden, setIsHidden] = useState(true);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      await fetchChatHistory();
+    };
+
+    fetchMessages();
+  }, []);
+
+  useEffect(() => {
+    if (items.length) {
+      setMessages(items);
+    }
+  }, [items.length]);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -129,26 +148,27 @@ const Chat: React.FC = () => {
     }
 
     setMessage("");
-    socket.emit(SOCKET_EVENT_NAME, { name: "daniel", message });
+    socket.emit(SOCKET_EVENT_NAME, { name: username, message });
   };
 
-  const renderMessages = messages.map((item: any, index: number) => {
-    return (
-      <>
-        <List>
-          <ListItem button key={index}>
-            <ListItemIcon>
-              <Avatar sx={{ bgcolor: getColor(item.name) }}>
-                {item.name.charAt(0)}
-              </Avatar>
-            </ListItemIcon>
-            <ListItemText primary={item.message}></ListItemText>
-          </ListItem>
-        </List>
-        <Divider />
-      </>
-    );
-  });
+  const renderMessages = messages.map((item: any, index: number) => (
+    <div key={`chat-${index}`}>
+      <List>
+        <ListItem button key={index}>
+          <ListItemIcon>
+            <Avatar sx={{ bgcolor: getColor(item.name) }}>
+              {item.name.charAt(0).toUpperCase()}
+            </Avatar>
+          </ListItemIcon>
+          <ListItemText
+            primary={item.message}
+            secondary={item.date}
+          ></ListItemText>
+        </ListItem>
+      </List>
+      <Divider />
+    </div>
+  ));
 
   return (
     <ChatContainer>
@@ -169,7 +189,13 @@ const Chat: React.FC = () => {
             </Grid>
             <ChatSection container>
               <Grid item xs={12}>
-                <MessageArea>{renderMessages}</MessageArea>
+                {isLoading && (
+                  <MessageArea>
+                    <CircularProgress size={20} />
+                  </MessageArea>
+                )}
+                {!isLoading && <MessageArea>{renderMessages}</MessageArea>}
+
                 <SendMessageContainer container>
                   <Grid item xs={11}>
                     <TextField
@@ -206,6 +232,6 @@ const Chat: React.FC = () => {
       )}
     </ChatContainer>
   );
-};
+});
 
 export default Chat;
