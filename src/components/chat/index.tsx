@@ -23,7 +23,7 @@ import {
 import ClickAwayListener from "@mui/base/ClickAwayListener";
 
 import styled from "@emotion/styled";
-import { API_BASE, SOCKET_EVENT_NAME } from "../../consts";
+import { SOCKET_URL, SOCKET_EVENT_NAME } from "../../consts";
 import { deepOrange, deepPurple } from "@mui/material/colors";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../store";
@@ -67,7 +67,7 @@ const SendMessageContainer = styled(Grid)`
   padding: 10px;
 `;
 
-const socket = io("http://localhost:8081", {
+const socket = io(SOCKET_URL as string, {
   withCredentials: true,
 });
 
