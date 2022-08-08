@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import { API_BASE } from "../consts";
 import { RefreshTokenPost, TokenProps } from "../models/Auth";
+import { ChatMessage } from "../models/Chat";
 import { CreateList, List } from "../models/List";
 import { NewTask, Task, TaskEdit } from "../models/Task";
 import { Credentials, User } from "../models/User";
@@ -223,6 +224,13 @@ class Api {
       { status: Number(status) },
       headers
     );
+
+    return data;
+  }
+
+  async fetchChat(): Promise<Promise<ChatMessage[]>> {
+    const headers = await this.getHeaders();
+    const { data } = await axios.get(`${API_BASE}/chat`, headers);
 
     return data;
   }
