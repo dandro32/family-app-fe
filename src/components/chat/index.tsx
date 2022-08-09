@@ -73,10 +73,9 @@ const SendMessageContainer = styled(Grid)`
   padding: 10px;
 `;
 
-const socket = io(SOCKET_URL as string, {
+const socket = io("wss://family-app-api.herokuapp.com:80", {
   withCredentials: true,
   secure: true,
-  reconnection: true,
 });
 
 const Chat: React.FC = observer(() => {
