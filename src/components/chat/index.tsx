@@ -73,7 +73,7 @@ const SendMessageContainer = styled(Grid)`
   padding: 10px;
 `;
 
-const socket = io("ws://family-app-api.herokuapp.com:8080", {
+const socket = io("wss://family-app-api.herokuapp.com", {
   withCredentials: true,
   secure: true,
 });
