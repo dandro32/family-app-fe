@@ -189,7 +189,7 @@ const Chat: React.FC = observer(() => {
     <ChatContainer>
       {isHidden && (
         <IconButton color="primary" aria-label="chat" onClick={showChat}>
-          <Badge badgeContent={messages.length} color="error">
+          <Badge badgeContent={messages.length - items.length} color="error">
             <ChatBubbleOutlineOutlinedIcon />
           </Badge>
         </IconButton>
