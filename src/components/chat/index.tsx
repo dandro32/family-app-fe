@@ -75,6 +75,7 @@ const SendMessageContainer = styled(Grid)`
 
 const socket = io(SOCKET_URL as string, {
   withCredentials: true,
+  secure: true,
 });
 
 const Chat: React.FC = observer(() => {
