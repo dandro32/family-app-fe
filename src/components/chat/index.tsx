@@ -126,6 +126,14 @@ const Chat: React.FC = observer(() => {
       setMessages((prevState) => [...prevState, response]);
     });
 
+    socket.on("connect_failed", function () {
+      console.log(socket);
+    });
+
+    socket.on("err", function (...rest) {
+      console.log(rest);
+    });
+
     return () => {
       socket.off("connect");
       socket.off("disconnect");
