@@ -1,4 +1,10 @@
-import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import io from "socket.io-client";
 
 import SendIcon from "@mui/icons-material/Send";
@@ -82,6 +88,11 @@ const Chat: React.FC = observer(() => {
   const [isHidden, setIsHidden] = useState(true);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef?.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -96,6 +107,10 @@ const Chat: React.FC = observer(() => {
       setMessages(items);
     }
   }, [items.length]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages.length]);
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -194,7 +209,12 @@ const Chat: React.FC = observer(() => {
                     <CircularProgress size={20} />
                   </MessageArea>
                 )}
-                {!isLoading && <MessageArea>{renderMessages}</MessageArea>}
+                {!isLoading && (
+                  <MessageArea>
+                    {renderMessages}
+                    <div ref={messagesEndRef} />
+                  </MessageArea>
+                )}
 
                 <SendMessageContainer container>
                   <Grid item xs={11}>
